@@ -1,11 +1,13 @@
+from threading import Thread
+
 from cocos import director
 from cocos import scene
 
 from components import Global
-#from components.MovableScreen import MovableScreen
-
-#from components.MainScene import MainSceneInstance
-from components.MainScene import getMainSceneInstance
+from components.MainSceneLayer import MainSceneLayer
+from events import Game
+from events.Network import Network
+from events.NetworkListener import NetworkListener
 
 
 def main():
@@ -27,14 +29,28 @@ def createInterface(tanktype, clan, res, ip):
 
     # Create a scene and set its initial layer.
 
-    MainSceneInstance = getMainSceneInstance()
+    Global.MainScene = MainSceneLayer()
+    main_scene = scene.Scene(Global.MainScene)
+    main_scene.schedule(Global.MainScene.buttonsHandler)
 
-    main_scene = scene.Scene(MainSceneInstance)
-    main_scene.schedule(MainSceneInstance.buttonsHandler)
-
-    director.director.on_resize = MainSceneInstance.resize
+    director.director.on_resize = Global.MainScene.resize
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
+
+    if res == 1:
+        Global.MainScene.connections_listener = Network(localaddr=('localhost', 1332))
+
+        thread = Thread(target = Game.callUpdatePositions)
+        thread.setDaemon(True)
+        thread.start()
+
+        thread = Thread(target = Game.callCheckCollisions)
+        thread.setDaemon(True)
+        thread.start()
+
+
+    if res == 2:
+        Global.MainScene.connections_listener = NetworkListener(ip, 1332, tanktype)
 #
 #     # Play the scene in the window.1
 #
