@@ -2,7 +2,10 @@ from cocos import director
 from cocos import scene
 
 from components import Global
-from components.MovableScreen import MovableScreen
+#from components.MovableScreen import MovableScreen
+
+#from components.MainScene import MainSceneInstance
+from components.MainScene import getMainSceneInstance
 
 
 def main():
@@ -24,10 +27,12 @@ def createInterface(tanktype, clan, res, ip):
 
     # Create a scene and set its initial layer.
 
-    main_scene = scene.Scene(Global.MainScene)
-    main_scene.schedule(Global.MainScene.buttonsHandler)
+    MainSceneInstance = getMainSceneInstance()
 
-    director.director.on_resize = Global.MainScene.resize
+    main_scene = scene.Scene(MainSceneInstance)
+    main_scene.schedule(MainSceneInstance.buttonsHandler)
+
+    director.director.on_resize = MainSceneInstance.resize
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
 #
