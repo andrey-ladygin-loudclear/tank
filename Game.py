@@ -11,7 +11,7 @@ from events.NetworkListener import NetworkListener
 
 
 def main():
-    res = raw_input('1 - create new game, 2 - connect\n')
+    res = int(raw_input('1 - create new game, 2 - connect\n'))
     clan = raw_input('Select your clan: 1 or 2\n')
     tanktype = raw_input('Select your tank type: 1 - 7\n')
     ip = None
@@ -37,7 +37,7 @@ def createInterface(tanktype, clan, res, ip):
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
 
-    if res == 1:
+    if ip is None:
         Global.MainScene.connections_listener = Network(localaddr=('localhost', 1332))
 
         thread = Thread(target = Game.callUpdatePositions)
@@ -47,9 +47,7 @@ def createInterface(tanktype, clan, res, ip):
         thread = Thread(target = Game.callCheckCollisions)
         thread.setDaemon(True)
         thread.start()
-
-
-    if res == 2:
+    else:
         Global.MainScene.connections_listener = NetworkListener(ip, 1332, tanktype)
 #
 #     # Play the scene in the window.1

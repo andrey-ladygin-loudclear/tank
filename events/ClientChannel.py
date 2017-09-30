@@ -2,7 +2,8 @@ from time import sleep
 
 from PodSixNet.Channel import Channel
 
-from helper import Global
+#from helper import Global
+from components import Global
 
 
 class ClientChannel(Channel):
