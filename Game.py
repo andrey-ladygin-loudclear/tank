@@ -4,7 +4,7 @@ from cocos import director
 from cocos import scene
 
 from components import Global
-from components.MainSceneLayer import MainSceneLayer
+from components.MainSceneLayer import MainSceneLayer, init_main_scene_layer, get_main_scene_layer
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
@@ -29,16 +29,18 @@ def createInterface(tanktype, clan, res, ip):
 
     # Create a scene and set its initial layer.
 
-    Global.MainScene = MainSceneLayer()
-    main_scene = scene.Scene(Global.MainScene)
-    main_scene.schedule(Global.MainScene.buttonsHandler)
+    # Global.MainScene = MainSceneLayer()
+    init_main_scene_layer()
+    main_scene_layer = get_main_scene_layer()
+    main_scene = scene.Scene(main_scene_layer)
+    main_scene.schedule(main_scene_layer.buttonsHandler)
 
-    director.director.on_resize = Global.MainScene.resize
+    director.director.on_resize = main_scene_layer.resize
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
 
     if ip is None:
-        Global.MainScene.connections_listener = Network(localaddr=('localhost', 1332))
+        main_scene_layer.connections_listener = Network(localaddr=('localhost', 1332))
 
         thread = Thread(target = Game.callUpdatePositions)
         thread.setDaemon(True)
@@ -48,7 +50,7 @@ def createInterface(tanktype, clan, res, ip):
         thread.setDaemon(True)
         thread.start()
     else:
-        Global.MainScene.connections_listener = NetworkListener(ip, 1332, tanktype)
+        main_scene_layer.connections_listener = NetworkListener(ip, 1332, tanktype)
 #
 #     # Play the scene in the window.1
 #
