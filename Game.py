@@ -5,6 +5,7 @@ from cocos import scene
 
 from components import Global
 from components.MainSceneLayer import MainSceneLayer, init_main_scene_layer, get_main_scene_layer
+from components.Map import Map
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
@@ -40,6 +41,9 @@ def createInterface(tanktype, clan, res, ip):
     director.director.run(main_scene)
 
     if ip is None:
+        # map = Map()
+        # map.init_walls()
+
         main_scene_layer.connections_listener = Network(localaddr=('localhost', 1332))
 
         thread = Thread(target = Game.callUpdatePositions)
