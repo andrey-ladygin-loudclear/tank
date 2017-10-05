@@ -31,8 +31,9 @@ def createInterface(tanktype, clan, res, ip):
     # Create a scene and set its initial layer.
 
     # Global.MainScene = MainSceneLayer()
-    init_main_scene_layer()
-    main_scene_layer = get_main_scene_layer()
+    #init_main_scene_layer()
+    #main_scene_layer = get_main_scene_layer()
+    main_scene_layer = MainSceneLayer()
     main_scene = scene.Scene(main_scene_layer)
     main_scene.schedule(main_scene_layer.buttonsHandler)
 
@@ -40,14 +41,13 @@ def createInterface(tanktype, clan, res, ip):
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
 
+    #Global.CollisionManager = cm.CollisionManagerBruteForce()
+    Global.GameLayers = Layers(main_scene_layer)
+    Global.GameObjects = Objects()
+
     if ip is None:
         # map = Map()
         # map.init_walls()
-
-
-        #Global.CollisionManager = cm.CollisionManagerBruteForce()
-        Global.GameLayers = Layers()
-        Global.GameObjects = Objects()
 
         main_scene_layer.connections_listener = Network(localaddr=('localhost', 1332))
 

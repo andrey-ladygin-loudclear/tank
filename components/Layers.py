@@ -18,13 +18,13 @@ class Layers:
     bullets = []
     tanks = None
 
-    def init(self):
+    def init(self, main_scene):
         self.bullets = BatchNode()
         self.walls = BatchNode()
         self.backgrounds = BatchNode()
         self.tanks = BatchNode()
 
-        main_scene = get_main_scene_layer()
+        #main_scene = get_main_scene_layer()
         main_scene.add(self.backgrounds, z=0)
         main_scene.add(self.bullets, z=1)
         main_scene.add(self.walls)
