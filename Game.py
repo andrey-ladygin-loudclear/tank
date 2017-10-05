@@ -44,6 +44,11 @@ def createInterface(tanktype, clan, res, ip):
         # map = Map()
         # map.init_walls()
 
+
+        #Global.CollisionManager = cm.CollisionManagerBruteForce()
+        Global.GameLayers = Layers()
+        Global.GameObjects = Objects()
+
         main_scene_layer.connections_listener = Network(localaddr=('localhost', 1332))
 
         thread = Thread(target = Game.callUpdatePositions)
