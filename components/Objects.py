@@ -3,18 +3,23 @@ from random import random
 from components.Map import Map
 
 last_id = 0
-Walls = []
+walls = []
+tanks = []
 
 def getWalls():
-    if len(Walls): return Walls
+    if len(walls): return walls
 
     map = Map()
     map.init_walls()
 
     for wall in map.get_walls():
-        Walls.append(wall.getObjectFromSelf())
+        walls.append(wall.getObjectFromSelf())
 
-    return Walls
+    return walls
+
+def addTank(tank):
+    tanks.append(tank)
+
 
 def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
     tank = Tank()

@@ -7,6 +7,8 @@ from helpers import Global
 from helpers.GameLayer import GameLayer
 from helpers.StatsLayer import StatsLayer
 
+from components.MainSceneLayer import get_main_scene_layer
+
 
 class Layers:
     globalPanel = None
@@ -16,19 +18,20 @@ class Layers:
     bullets = []
     tanks = None
 
-    def init(self):
+    def init(self, main_scene):
         self.bullets = BatchNode()
         self.walls = BatchNode()
         self.backgrounds = BatchNode()
         self.tanks = BatchNode()
 
-        Global.MainScene.add(self.backgrounds, z=0)
-        Global.MainScene.add(self.bullets, z=1)
-        Global.MainScene.add(self.walls)
-        Global.MainScene.add(self.tanks)
+        #main_scene = get_main_scene_layer()
+        main_scene.add(self.backgrounds, z=0)
+        main_scene.add(self.bullets, z=1)
+        main_scene.add(self.walls)
+        main_scene.add(self.tanks)
 
         self.globalPanel = cocos.layer.Layer()
-        Global.MainScene.add(self.globalPanel, z=1)
+        main_scene.add(self.globalPanel, z=1)
 
         self.stats = StatsLayer()
 
