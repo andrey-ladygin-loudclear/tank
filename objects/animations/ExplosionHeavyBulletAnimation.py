@@ -3,8 +3,6 @@ from threading import Timer
 import pyglet
 from cocos import sprite
 
-from helpers import Global
-
 
 class explosionHeavyBulletAnimation:
 

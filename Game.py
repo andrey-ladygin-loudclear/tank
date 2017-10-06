@@ -1,11 +1,14 @@
 from threading import Thread
+from time import sleep
 
 from cocos import director
 from cocos import scene
 
 from components import Global
-from components.MainSceneLayer import MainSceneLayer, init_main_scene_layer, get_main_scene_layer
+from components.Layers import Layers
+from components.MainSceneLayer import MainSceneLayer
 from components.Map import Map
+from components.Objects import init_global_variables, addGamePlayer
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
@@ -14,15 +17,15 @@ from events.NetworkListener import NetworkListener
 def main():
     res = int(raw_input('1 - create new game, 2 - connect\n'))
     clan = raw_input('Select your clan: 1 or 2\n')
-    tanktype = raw_input('Select your tank type: 1 - 7\n')
+    tanktype = int(raw_input('Select your tank type: 1 - 7\n'))
     ip = None
 
     if res == 2:
         ip = raw_input('input ip\n')
 
-    createInterface(tanktype, clan, res, ip)
+    createInterface(tanktype, clan, ip)
 
-def createInterface(tanktype, clan, res, ip):
+def createInterface(tanktype, clan, ip):
 
     director.director.init(width=3000, height=960, do_not_scale=True, resizable=True)
 
@@ -30,26 +33,17 @@ def createInterface(tanktype, clan, res, ip):
 
     # Create a scene and set its initial layer.
 
-    # Global.MainScene = MainSceneLayer()
-    #init_main_scene_layer()
-    #main_scene_layer = get_main_scene_layer()
+
     main_scene_layer = MainSceneLayer()
     main_scene = scene.Scene(main_scene_layer)
     main_scene.schedule(main_scene_layer.buttonsHandler)
 
-    director.director.on_resize = main_scene_layer.resize
-    director.director.window.push_handlers(Global.CurrentKeyboard)
-    director.director.run(main_scene)
+    game_layers = Layers(main_scene_layer)
+    init_global_variables(game_layers)
 
-    #Global.CollisionManager = cm.CollisionManagerBruteForce()
-    Global.GameLayers = Layers(main_scene_layer)
-    Global.GameObjects = Objects()
 
     if ip is None:
-        # map = Map()
-        # map.init_walls()
-
-        main_scene_layer.connections_listener = Network(localaddr=('localhost', 1332))
+        addGamePlayer(type=tanktype, clan=clan)
 
         thread = Thread(target = Game.callUpdatePositions)
         thread.setDaemon(True)
@@ -58,8 +52,25 @@ def createInterface(tanktype, clan, res, ip):
         thread = Thread(target = Game.callCheckCollisions)
         thread.setDaemon(True)
         thread.start()
+
+        thread = Thread(target = connectionsListenersPump)
+        thread.setDaemon(True)
+        thread.start()
     else:
         main_scene_layer.connections_listener = NetworkListener(ip, 1332, tanktype)
+
+
+    director.director.on_resize = main_scene_layer.resize
+    director.director.window.push_handlers(Global.CurrentKeyboard)
+    director.director.run(main_scene)
+
+def connectionsListenersPump():
+    connections_listener = Network(localaddr=('localhost', 1332))
+
+    while True:
+        connections_listener.Pump()
+        sleep(0.0001)
+
 #
 #     # Play the scene in the window.1
 #

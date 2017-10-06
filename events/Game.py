@@ -2,8 +2,11 @@ from time import sleep
 import cocos.collision_model as cm
 
 from components import Global
+from components import NetworkCodes
 from components.Collisions import Collisions
 from components.Explosion import Explosion
+from components.Global import addToQueue, getAllQueue, clearQueue
+from components.Objects import getGameTanks, getGameBullets, getGameWalls
 
 
 def callUpdatePositions():
@@ -18,11 +21,11 @@ def callCheckCollisions():
 
 def updatePositions():
     batch = {
-        'action': Global.NetworkActions.UPDATE_BATCH,
+        'action': NetworkCodes.NetworkActions.UPDATE_BATCH,
         'objects': []
     }
 
-    for tank in Global.GameObjects.getTanks():
+    for tank in getGameTanks():
         #player.setNewPosition()
 
         try:
@@ -32,11 +35,11 @@ def updatePositions():
 
         batch['objects'].append(tank.getObjectFromSelf())
 
-    Global.Queue.append(batch)
+    addToQueue(batch)
 
 
 def checkCollisions():
-    for bullet in Global.GameObjects.getBullets():
+    for bullet in getGameBullets():
         bullet.update()
         bullet.cshape = cm.AARectShape(bullet.position, 2, 2)
 
@@ -45,17 +48,17 @@ def checkCollisions():
             explosion.checkDamageCollisions()
             bullet.destroy()
 
-    for tank in Global.GameObjects.getTanks():
+    for tank in getGameTanks():
         if tank.health <= 0:
             tank.destroy()
 
-    for wall in Global.GameObjects.getWalls():
+    for wall in getGameWalls():
         if wall.health <= 0:
             wall.destroy()
 
 def sendAllTanksToClients():
-    for player in Global.GameObjects.getTanks():
-        Global.Queue.append(player.getObjectFromSelf())
+    for player in getGameTanks():
+        addToQueue(player.getObjectFromSelf())
 
 def sendDataToPlayers():
     updatePerSecond = 40
@@ -63,10 +66,10 @@ def sendDataToPlayers():
     while True:
         data = {
             'action': 'update',
-            'data': Global.Queue
+            'data': getAllQueue()
         }
 
-        Global.Queue = []
+        clearQueue()
 
         for channel in Global.PullConnsctions:
             channel.Send(data)

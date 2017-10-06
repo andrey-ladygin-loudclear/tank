@@ -3,12 +3,6 @@ from threading import Timer
 import cocos
 from cocos.batch import BatchNode
 
-from helpers import Global
-from helpers.GameLayer import GameLayer
-from helpers.StatsLayer import StatsLayer
-
-from components.MainSceneLayer import get_main_scene_layer
-
 
 class Layers:
     globalPanel = None
@@ -18,7 +12,7 @@ class Layers:
     bullets = []
     tanks = None
 
-    def init(self, main_scene):
+    def __init__(self, main_scene):
         self.bullets = BatchNode()
         self.walls = BatchNode()
         self.backgrounds = BatchNode()
@@ -33,7 +27,7 @@ class Layers:
         self.globalPanel = cocos.layer.Layer()
         main_scene.add(self.globalPanel, z=1)
 
-        self.stats = StatsLayer()
+        # self.stats = StatsLayer()
 
     def addElement(self, item, time=0):
         self.globalPanel.add(item)
@@ -45,10 +39,12 @@ class Layers:
     def addTank(self, tank):
         self.tanks.add(tank)
         self.tanks.add(tank.Gun)
+        self.tanks.add(tank.healthHelper)
 
     def removeTank(self, tank):
         self.tanks.remove(tank)
         self.tanks.remove(tank.Gun)
+        self.tanks.remove(tank.healthHelper)
 
     def addAnimation(self, anim):
         self.globalPanel.add(anim)

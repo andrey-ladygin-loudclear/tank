@@ -1,11 +1,3 @@
-
-import random
-
-import pyglet
-from cocos import sprite
-from cocos.actions import Action
-
-from helpers import Global
 from objects.Bullet import Bullet
 from objects.animations.ExplosionStandartBulletAnimation import explosionStandartBulletAnimation
 

@@ -8,14 +8,6 @@ from pyglet.window import key
 from components import Global
 from events.NetworkListener import NetworkListener
 
-main_scene = None
-
-def init_main_scene_layer():
-    global main_scene
-    main_scene = MainSceneLayer()
-
-def get_main_scene_layer():
-    return main_scene
 
 class MainSceneLayer(cocos.layer.ScrollableLayer):
     is_event_handler = True

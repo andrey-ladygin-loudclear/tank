@@ -3,8 +3,6 @@ from threading import Timer
 from cocos import sprite
 from pyglet.image import load_animation
 
-from helpers import Global
-
 
 class ExplosionTankAnimation(sprite.Sprite):
 

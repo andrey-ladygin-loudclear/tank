@@ -3,9 +3,8 @@ import cocos.collision_model as cm
 from cocos import sprite
 from cocos.layer import ColorLayer
 
-from helpers import Global
-from helpers.HealthHelper import HealthHelper
-from helpers.TankHelper import TankHelper
+from components import NetworkCodes
+from helpers.HealthHelper import HealthSprite
 from objects.Gun import Gun
 from objects.animations.ExplosionTankAnimation import ExplosionTankAnimation
 from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
@@ -17,6 +16,7 @@ class Tank(sprite.Sprite):
     id = 0
 
     speed = 30
+    health = 100
 
     old_position = (0, 0)
     velocity = (0, 0)
@@ -27,15 +27,16 @@ class Tank(sprite.Sprite):
 
     healthHelper = None
 
-    def __init__(self, type):
-        spriteName = TankHelper.getSpriteByTank(type)
-        spriteGunName = TankHelper.getGunSpriteByTank(type)
+    spriteName = 'assets/tank/parts/E-100_1.png'
+    spriteGunName = 'assets/tank/parts/E-100_2.png'
 
-        self.Gun = Gun(spriteGunName, self)
-        super(Tank, self).__init__(spriteName)
-
-        self.healthHelper = HealthHelper(self)
+    def __init__(self):
+        self.Gun = Gun(self.spriteGunName, self)
+        super(Tank, self).__init__(self.spriteName)
         self.scale = self.Gun.scale = 0.5
+
+        self.healthHelper = HealthSprite()
+        self.updateHealthPosition()
 
         self.cshape = cm.AARectShape(
             self.position,
@@ -48,11 +49,14 @@ class Tank(sprite.Sprite):
         self.Gun.position = self.position
         self.Gun.rotation = self.rotation + self.gun_rotation
 
-        if self.healthHelper: self.healthHelper.updateHealthPosition()
+        self.updateHealthPosition()
 
         # self.rotation = 180
         # self.Gun.position = self.position
         # self.Gun.rotation = self.rotation + self.Gun.gun_rotation
+
+    def updateHealthPosition(self):
+        if self.healthHelper: self.healthHelper.updateHealthPosition(self.position)
 
     def setHealth(self, health):
         self.healthHelper.setHealth(health)
@@ -66,6 +70,21 @@ class Tank(sprite.Sprite):
     def destroy(self):
         animation = ExplosionTankAnimation()
         animation.appendAnimationToLayer(self.position)
-        if self in Global.GameObjects.getTanks(): Global.GameObjects.removeTank(self)
 
-        self.healthHelper.destroy()
+        #removeTankFromGame(self)
+
+    def getObjectFromSelf(self):
+        x, y = self.position
+        r = self.rotation
+        gr = self.gun_rotation
+
+        return {
+            'action': NetworkCodes.NetworkActions.UPDATE,
+            NetworkCodes.NetworkDataCodes.ID: self.id,
+            NetworkCodes.NetworkDataCodes.POSITION: (int(x), int(y)),
+            NetworkCodes.NetworkDataCodes.ROTATION: int(r),
+            NetworkCodes.NetworkDataCodes.GUN_ROTATION: int(gr),
+            NetworkCodes.NetworkDataCodes.CLAN: self.clan,
+            NetworkCodes.NetworkDataCodes.HEALTH: self.health,
+            NetworkCodes.NetworkDataCodes.TYPE: self.type,
+        }

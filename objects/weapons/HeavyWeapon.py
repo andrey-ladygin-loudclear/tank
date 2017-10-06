@@ -3,8 +3,6 @@ import random
 import math
 from time import time
 
-from helpers import Global
-from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
 from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
 from objects.bullets.HeavyBullet import HeavyBullet
 

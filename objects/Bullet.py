@@ -4,8 +4,6 @@ from cocos import actions
 from cocos import sprite
 from cocos.actions import Action, MoveBy
 
-from helpers import Global
-
 
 class Bullet(sprite.Sprite):
     #startPosition = (0, 0)

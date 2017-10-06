@@ -1,10 +1,18 @@
 from random import random
 
 from components.Map import Map
+from helpers.TankHelper import TankHelper
+from objects.Tank import Tank
 
 last_id = 0
 walls = []
 tanks = []
+bullets = []
+Layers = None
+
+def init_global_variables(game_layers):
+    global Layers
+    Layers = game_layers
 
 def getWalls():
     if len(walls): return walls
@@ -17,8 +25,18 @@ def getWalls():
 
     return walls
 
-def addTank(tank):
+def getGameTanks():
+    return tanks
+
+def getGameBullets():
+    return bullets
+
+def getGameWalls():
+    return walls
+
+def addTankToObjectsAndSprites(tank):
     tanks.append(tank)
+    Layers.addTank(tank)
 
 
 def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
@@ -42,17 +60,26 @@ def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
 
     return tank.id
 
-def addPlayer(self, type):
-    tank = TankHelper.getSpriteByTank(type)
-    tank.id = self.getNextId()
-    tank.clan = 1
-    tank.setPosition((100, 100))
-    Global.GameObjects.addTank(tank)
-    self.sendAllTanksToClients()
+def addGamePlayer(type, clan, position=(100, 100), rotation=0):
+    tank = TankHelper.getTankByType(type)
+    #tank = Tank()
+    #tank = TankFactory.create(type)
+    tank.id = getNextId()
+    tank.clan = clan
+    # tank.setPosition(position)
+    tank.position = position
+    tank.rotation = rotation
+    #self.sendAllTanksToClients()
+
+    addTankToObjectsAndSprites(tank)
+
     return tank.id
 
+def removeTankFromGame(tank):
+    #if self in Global.GameObjects.getTanks(): Global.GameObjects.removeTank(self)
+    pass
 
-
-def getNextId(self):
-    self.last_id += 1
-    return self.last_id
+def getNextId():
+    global last_id
+    last_id += 1
+    return last_id

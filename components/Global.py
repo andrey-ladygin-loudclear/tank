@@ -2,44 +2,19 @@ from pyglet.window import key
 import cocos.collision_model as cm
 
 CurrentKeyboard = key.KeyStateHandler()
-
 CollisionManager = cm.CollisionManagerBruteForce()
-
-MainScene = None
-
 PullConnsctions = []
 
-class NetworkDataCodes:
-    TANK_CLASS = 't'
-    FRACTION = 'f'
-    GUN_ROTATION = 'g'
-    POSITION = 'p'
-    LAST_UPDATE_TIME = 'lt'
-    ANGLE_OF_DEFLECTION = 'aod'
-    ROTATION = 'r'
-    TYPE = 'y'
-    SRC = 's'
-    ID = 'i'
-    HEALTH = 'h'
-    DAMAGE = 'd'
-    PARENT_ID = 'pi'
+Queue = []
 
-    KVTank = 'k'
-    ETank = 'e'
-    PLAYER = 'p'
-    TANK = 't'
-    BULLET = 'b'
-    STANDART_BULLET = 'sb'
-    HEAVY_BULLET = 'hb'
-    WALL = 'w'
+def addToQueue(event):
+    global Queue
+    Queue.append(event)
 
+def getAllQueue():
+    global Queue
+    return Queue
 
-class NetworkActions:
-    INIT = '1'
-    TANK_MOVE = '2'
-    UPDATE = '3'
-    TANK_FIRE = '4'
-    DESTROY = '5'
-    TEST = '6'
-    DAMAGE = '7'
-    UPDATE_BATCH = '8'
+def clearQueue():
+    global Queue
+    Queue = []
