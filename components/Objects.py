@@ -2,6 +2,7 @@ from random import random
 
 from components.Map import Map
 from helpers.TankHelper import TankHelper
+from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from objects.Tank import Tank
 
 last_id = 0
@@ -70,6 +71,8 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0):
     tank.position = position
     tank.rotation = rotation
     #self.sendAllTanksToClients()
+    #if tank.id == Global.CurrentPlayerId:
+    tank.do(DefaultTankMovingHandlers())
 
     addTankToObjectsAndSprites(tank)
 

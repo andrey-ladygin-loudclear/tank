@@ -3,22 +3,33 @@ import math
 import operator
 from cocos import actions
 import cocos.collision_model as cm
+from pyglet.window import key
 
-import Global
+from components import Global
 
 
 class DefaultTankMovingHandlers(actions.Move):
 
     speed = 0
 
-    RIGHT = None
-    LEFT = None
-    UP = None
-    DOWN = None
-    GUN_LEFT = None
-    GUN_RIGHT = None
-    FIRE_HEAVY_GUN = None
-    FIRE_LIGHT_GUN = None
+    # RIGHT = None
+    # LEFT = None
+    # UP = None
+    # DOWN = None
+    # GUN_LEFT = None
+    # GUN_RIGHT = None
+    # FIRE_HEAVY_GUN = None
+    # FIRE_LIGHT_GUN = None
+
+
+    RIGHT = key.RIGHT
+    LEFT = key.LEFT
+    UP = key.UP
+    DOWN = key.DOWN
+    GUN_LEFT = key.Q
+    GUN_RIGHT = key.E
+    FIRE_HEAVY_GUN = key.SPACE
+    FIRE_LIGHT_GUN = key.W
 
     # step() is called every frame.
     # dt is the number of seconds elapsed since the last call.
@@ -58,22 +69,6 @@ class DefaultTankMovingHandlers(actions.Move):
             self.target.position = self.target.old_position
         else:
             self.target.old_position = self.target.position
-
-            # if(self.target.position != new_position):
-                # Global.TankNetworkListenerConnection.Send({
-                #     'action': Global.NetworkActions.TANK_MOVE,
-                #     'pos': self.target.position,
-                #     'id': self.target.id
-                # })
-                # Global.TankNetworkListenerConnection.Send({
-                #     'action': Global.NetworkActions.TANK_MOVE,
-                #     'pos': self.target.position,
-                #     'turn': turns_direction,
-                #     'mov': moving_directions,
-                #     'gun_turn': gun_turns_direction,
-                #     'id': self.target.id
-                # })
-
             new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
             self.setNewVelocity(new_velocity)
 
@@ -131,8 +126,10 @@ class DefaultTankMovingHandlers(actions.Move):
         self.target.Gun.position = self.target.position
 
     def setGunRotation(self, gun_turns_direction):
-        self.target.Gun.gun_rotation += self.target.gun_rotation_speed * (gun_turns_direction)
-        self.target.Gun.rotation = self.target.rotation + self.target.Gun.gun_rotation
+        #self.target.Gun.gun_rotation += self.target.gun_rotation_speed * (gun_turns_direction)
+        #self.target.Gun.rotation = self.target.rotation + self.target.Gun.gun_rotation
+        self.target.gun_rotation += self.target.gun_rotation_speed * (gun_turns_direction)
+        self.target.Gun.rotation = self.target.rotation + self.target.gun_rotation
 
     def addSpeed(self, moving_directions):
         if moving_directions:
