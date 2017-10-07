@@ -31,14 +31,8 @@ class Tank(sprite.Sprite):
     spriteName = 'assets/tank/parts/E-100_1.png'
     spriteGunName = 'assets/tank/parts/E-100_2.png'
 
-
-
     bot = False
     clan = 0
-    #width = 50
-    #height = 50
-    #scale = 0.5
-    rotation = 0
     rotation_speed = 1
     gun_rotation_speed = 1
     speed_acceleration = 1

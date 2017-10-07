@@ -8,22 +8,23 @@ from components import Global
 from components.Layers import Layers
 from components.MainSceneLayer import MainSceneLayer
 from components.Map import Map
-from components.Objects import init_global_variables, addGamePlayer
+from components.Objects import init_global_variables, addGamePlayer, load_map
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
 
 
 def main():
-    res = int(raw_input('1 - create new game, 2 - connect\n'))
-    clan = raw_input('Select your clan: 1 or 2\n')
-    tanktype = int(raw_input('Select your tank type: 1 - 7\n'))
-    ip = None
-
-    if res == 2:
-        ip = raw_input('input ip\n')
-
-    createInterface(tanktype, clan, ip)
+    createInterface(1, 1, None)
+    # res = int(raw_input('1 - create new game, 2 - connect\n'))
+    # clan = raw_input('Select your clan: 1 or 2\n')
+    # tanktype = int(raw_input('Select your tank type: 1 - 7\n'))
+    # ip = None
+    #
+    # if res == 2:
+    #     ip = raw_input('input ip\n')
+    #
+    # createInterface(tanktype, clan, ip)
 
 def createInterface(tanktype, clan, ip):
 
@@ -43,7 +44,8 @@ def createInterface(tanktype, clan, ip):
 
 
     if ip is None:
-        addGamePlayer(type=tanktype, clan=clan)
+        addGamePlayer(type=tanktype, clan=clan, add_moving_handler=True)
+        load_map()
 
         thread = Thread(target = Game.callUpdatePositions)
         thread.setDaemon(True)

@@ -23,6 +23,7 @@ class NetworkDataCodes:
     STANDART_BULLET = 'sb'
     HEAVY_BULLET = 'hb'
     WALL = 'w'
+    SCALE = 'sc'
 
 
 class NetworkActions:

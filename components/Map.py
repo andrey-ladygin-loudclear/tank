@@ -2,11 +2,13 @@ import json
 
 import cocos.collision_model as cm
 
+from Landing.LandingObject import LandingObject
 from components import Global
 
 
 class Map:
     walls = []
+    id = 1
 
     def get_map(self):
         with open('map2/exportMap.json', 'r') as f:
@@ -24,9 +26,12 @@ class Map:
 
             wall = LandingObject()
             wall.type = object.get('type')
-            wall.id = Global.game.getNextId()
+            #wall.id = Global.game.getNextId()
+            wall.id = self.id
             wall.src = object.get('src')
             wall.set_position(object.get('position'))
+
+            self.id += 1
 
             self.walls.append(wall)
 

@@ -49,7 +49,7 @@ class Layers:
     def addAnimation(self, anim):
         self.globalPanel.add(anim)
 
-    def addWall(self, wall, z):
+    def addWall(self, wall, z=0):
         self.walls.add(wall, z=z)
 
     def removeWall(self, wall):
