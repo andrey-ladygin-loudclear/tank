@@ -7,6 +7,8 @@ from cocos import sprite
 from cocos.actions import Action, MoveBy
 
 from components import Global
+from components.Global import addToQueue
+from components.NetworkCodes import NetworkActions
 
 
 class Bullet(sprite.Sprite):
@@ -83,6 +85,11 @@ class Bullet(sprite.Sprite):
         #if self in Global.GameLayers.bullets: Global.GameLayers.removeBullet(self)
         #if self in Global.GameObjects: Global.GameObjects.remove(self)
 
+    def destroyEvent(self):
+        addToQueue({
+            'action': NetworkDataCodes.BULLET,
+            'walls': walls,
+        })
 
 class removeAfterComplete(Action):
     def step(self, dt):

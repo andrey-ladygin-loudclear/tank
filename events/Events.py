@@ -45,6 +45,7 @@ class Events():
         dmg = object.get(NetworkDataCodes.DAMAGE)
         health = object.get(NetworkDataCodes.HEALTH)
 
+        print('id', id)
         tank = Global.getGameTank(id)
         tank.setHealth(health)
         Global.Layers.stats.damage(dmg, tank.position)

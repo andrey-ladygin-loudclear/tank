@@ -47,7 +47,7 @@ def checkCollisions():
             explosion = Explosion(bullet)
             explosion.checkDamageCollisions()
 
-            bullet.destroy()
+            bullet.destroyEvent()
 
     for tank in getGameTanks():
         if tank.health <= 0:
