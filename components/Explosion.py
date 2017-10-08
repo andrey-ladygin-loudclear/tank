@@ -13,7 +13,7 @@ class Explosion():
         self.bullet = bullet
 
     def checkDamageCollisions(self):
-        for player in Global.GameObjects.getTanks():
+        for player in Global.getGameTanks():
             player.cshape = cm.AARectShape(
                 player.position,
                 player.width // 2,
@@ -30,12 +30,12 @@ class Explosion():
         damage_collisions = Global.CollisionManager.objs_colliding(self)
 
         if damage_collisions:
-            for damage_wall in Global.GameObjects.getWalls():
+            for damage_wall in Global.getGameWalls():
                 if damage_wall.type == 'destroyable':
                     if damage_wall in damage_collisions:
                         damage_wall.damage(self.bullet)
 
-            for player in Global.GameObjects.getTanks():
+            for player in Global.getGameTanks():
                 if player in damage_collisions:
                     player.damage(self.bullet)
 
@@ -48,12 +48,12 @@ class Explosion():
         damage_collisions = Global.CollisionManager.objs_colliding(self)
 
         if damage_collisions:
-            for damage_wall in Global.GameObjects.getWalls():
+            for damage_wall in Global.getGameWalls():
                 if damage_wall in damage_collisions:
                     damage_wall.damage(self.bullet)
 
 
-        for player in Global.GameObjects.getTanks():
+        for player in Global.getGameTanks():
 
             #if parent_id == player.id: continue
 

@@ -1,9 +1,13 @@
+import random
+
 import cocos
 import cocos.collision_model as cm
+import math
 from cocos import sprite
 from cocos.layer import ColorLayer
 
-from components import NetworkCodes
+from components import NetworkCodes, Global
+from components.NetworkCodes import NetworkActions, NetworkDataCodes
 from helpers.HealthHelper import HealthSprite
 from objects.Gun import Gun
 from objects.animations.ExplosionTankAnimation import ExplosionTankAnimation
@@ -81,6 +85,41 @@ class Tank(sprite.Sprite):
         animation.appendAnimationToLayer(self.position)
 
         #removeTankFromGame(self)
+
+    def damage(self, bullet):
+        x, y = self.position
+        x2, y2 = bullet.position
+        deltax = math.pow(x - x2, 2)
+        deltay = math.pow(y - y2, 2)
+        delta = (deltax + deltay)
+        range = math.sqrt(delta)
+        range = range - (self.width + self.height) * self.scale / 2
+        #range = max(range / 4, 1)
+
+        #dmg = bullet.damage - math.pow((( -2 * bullet.damageRadius / math.pow(bullet.damageRadius, 2) ) * math.pi * range), 2)
+        dmg = bullet.damage * self.damageKoef(range)
+        #print('range: ' + str(range))
+        #print('damage (without rand): ' + str(dmg))
+        dmg += random.randrange(-bullet.damage / 10, bullet.damage / 10)
+
+        self.health -= dmg
+
+        Global.Queue.append({
+            "action": NetworkActions.DAMAGE,
+            NetworkDataCodes.TYPE: NetworkDataCodes.TANK,
+            NetworkDataCodes.ID: self.id,
+            NetworkDataCodes.HEALTH: self.health,
+            NetworkDataCodes.DAMAGE: dmg
+        })
+
+    def damageKoef(self, range):
+        maxRange = 20
+
+        try:
+            v = math.log(-1 * range + maxRange, 1.22) + 5
+        except ValueError:
+            v = 0
+        return v / maxRange
 
     def getObjectFromSelf(self):
         x, y = self.position

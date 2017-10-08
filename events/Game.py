@@ -5,8 +5,7 @@ from components import Global
 from components import NetworkCodes
 from components.Collisions import Collisions
 from components.Explosion import Explosion
-from components.Global import addToQueue, getAllQueue, clearQueue
-from components.Objects import getGameTanks, getGameBullets, getGameWalls
+from components.Global import addToQueue, getAllQueue, clearQueue, getGameTanks, getGameBullets, getGameWalls
 
 
 def callUpdatePositions():
@@ -15,6 +14,7 @@ def callUpdatePositions():
         sleep(0.033)
 
 def callCheckCollisions():
+
     while True:
         checkCollisions()
         sleep(0.01)
@@ -40,12 +40,13 @@ def updatePositions():
 
 def checkCollisions():
     for bullet in getGameBullets():
-        bullet.update()
+        #bullet.update()
         bullet.cshape = cm.AARectShape(bullet.position, 2, 2)
 
         if Collisions.checkWithWalls(bullet) or Collisions.checkWithObjects(bullet, bullet.parent_id) or bullet.exceededTheLengthLimit():
             explosion = Explosion(bullet)
             explosion.checkDamageCollisions()
+
             bullet.destroy()
 
     for tank in getGameTanks():

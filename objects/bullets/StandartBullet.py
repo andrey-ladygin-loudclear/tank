@@ -1,5 +1,10 @@
+import pyglet
+
+from components import Global
 from objects.Bullet import Bullet
 from objects.animations.ExplosionStandartBulletAnimation import explosionStandartBulletAnimation
+from objects.animations.ExplosionStandartBulletAnimation2 import explosionStandartBulletAnimation2
+from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
 
 
 class StandartBullet(Bullet):
@@ -19,11 +24,16 @@ class StandartBullet(Bullet):
         super(StandartBullet, self).__init__(self.spriteName)
 
     def removeAnimation(self):
-        Global.GameLayers.removeAnimation(self)
+        Global.Layers.removeAnimation(self)
         # if self in Global.layers['bullets']: Global.layers['bullets'].remove(self)
         # if self in Global.objects['bullets']: Global.objects['bullets'].remove(self)
 
     def destroy(self, position=None):
         super(StandartBullet, self).destroy()
+        # c = explosionStandartBulletAnimation2()
+        # c.appendAnimationToLayer((200,200), 90)
+        return
         animation = explosionStandartBulletAnimation()
-        animation.appendAnimationToLayer(position, self.rotation)
+        #animation.appendAnimationToLayer(position, self.rotation)
+        animation.appendAnimationToLayer(position)
+        super(StandartBullet, self).destroy()

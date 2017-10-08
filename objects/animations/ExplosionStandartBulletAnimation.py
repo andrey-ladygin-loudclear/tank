@@ -1,16 +1,20 @@
 from threading import Timer
 
-import pyglet
 from cocos import sprite
+from pyglet.image import load_animation
+
+from components import Global
 
 
-class explosionStandartBulletAnimation:
+class explosionStandartBulletAnimation(sprite.Sprite):
+
+    src = 'assets/weapons/bullet-explode.gif'
 
     def __init__(self):
-        explosion = pyglet.image.load('assets/weapons/standart-bullet-explode.png')
-        explosion_seq = pyglet.image.ImageGrid(explosion, 1, 12)
-        explosion_tex_seq = pyglet.image.TextureGrid(explosion_seq)
-        self.animation = pyglet.image.Animation.from_image_sequence(explosion_tex_seq, .05, loop=False)
+        self.animation = load_animation(self.src)
+        self.animation.frames[-1].duration = None # stop loop
+
+        super(explosionStandartBulletAnimation, self).__init__(self.animation)
 
         self.anim = sprite.Sprite(self.animation)
         self.anim.image_anchor = (self.animation.get_max_width() / 2, self.animation.get_max_height() / 4)
@@ -19,13 +23,8 @@ class explosionStandartBulletAnimation:
     def getAnimation(self):
         return self.animation
 
-    def getSprite(self, position, rotation):
+    def appendAnimationToLayer(self, position):
         self.anim.position = position
-        self.anim.rotation = rotation - 90
-        return self.anim
-
-    def appendAnimationToLayer(self, position, rotation):
-        anim = self.getSprite(position, rotation)
-        Global.GameLayers.addAnimation(anim)
-        t = Timer(self.animation.get_duration(), lambda: Global.GameLayers.removeAnimation(anim))
+        Global.Layers.addAnimation(self.anim)
+        t = Timer(self.animation.get_duration(), lambda: Global.Layers.removeAnimation(self.anim))
         t.start()

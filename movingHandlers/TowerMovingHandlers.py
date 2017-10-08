@@ -1,10 +1,8 @@
 import math
-import random
-from threading import Thread, Timer
-
 import time
 from cocos import actions
-from pyglet.window import key
+
+from components import Global
 
 
 class TowerMovingHandlers(actions.Move):
@@ -14,6 +12,10 @@ class TowerMovingHandlers(actions.Move):
     # def __init__(self, target):
     #     Thread.__init__(self)
     #     self.target = target
+
+    def __init__(self):
+        super(TowerMovingHandlers, self).__init__()
+
 
     def step(self, dt):
         self.check_position()
@@ -33,10 +35,10 @@ class TowerMovingHandlers(actions.Move):
         if player and distanse < 600:
             angleToPlayer = getAngleWithObject(self.target, player)
             self.rotateGunToObject(player)
-            diffAngle = getDiffAngleInSector(self.target.getGunRotation(), angleToPlayer)
+            diffAngle = getDiffAngleInSector(self.target.rotation, angleToPlayer)
 
             if diffAngle < 5:
-                self.target.heavy_fire()
+                self.target.fire()
             return True
         return False
 
@@ -46,10 +48,10 @@ class TowerMovingHandlers(actions.Move):
         if building and distanse < 600:
             angleToPlayer = getAngleWithObject(self.target, building)
             self.rotateGunToObject(building)
-            diffAngle = getDiffAngleInSector(self.target.getGunRotation(), angleToPlayer)
+            diffAngle = getDiffAngleInSector(self.target.rotation, angleToPlayer)
 
             if diffAngle < 5:
-                self.target.heavy_fire()
+                self.target.fire()
             return True
         return False
 
@@ -62,9 +64,9 @@ class TowerMovingHandlers(actions.Move):
             self.target.move(1)
 
     def rotateGunToAngle(self, angle):
-        gunAngle = abs(self.target.gun_rotation() % 360)
+        gunAngle = abs(self.target.rotation() % 360)
         angleDiff = self.getDiffAngle(gunAngle, angle)
-        self.target.gun_rotation += angleDiff * self.target.rotation_speed
+        self.target.rotation += angleDiff * self.target.rotation_speed
 
     def rotateToAngle(self, angle):
         tankAngle = abs(self.target.rotation % 360)
@@ -85,21 +87,21 @@ class TowerMovingHandlers(actions.Move):
 
     def rotateGunToObject(self, player):
         angleToPlayer = getAngleWithObject(self.target, player)
-        gunAngle = abs(self.target.getGunRotation() % 360)
+        gunAngle = abs(self.target.rotation % 360)
         angleDiff = gunAngle - angleToPlayer
 
         if abs(angleDiff) < 2: return
 
         if (angleDiff > 0 and angleDiff < 180) or angleDiff < -180:
-            self.target.gun_rotation -= 1
+            self.target.rotation -= 1
         elif (angleDiff < 0 and angleDiff > -180) or angleDiff > 180:
-            self.target.gun_rotation += 1
+            self.target.rotation += 1
 
     def getPlayerByShortestDistanse(self):
         shortest_distanse = 0
         shortest_player = None
 
-        for player in Global.GameObjects.getTanks():
+        for player in Global.getGameTanks():
             if player.clan == self.target.clan: continue
 
             distanse = self.getDistanceByPlayer(player)
@@ -114,7 +116,8 @@ class TowerMovingHandlers(actions.Move):
         shortest_distanse = 0
         shortest_building = None
 
-        for building in Global.GameObjects.getWalls():
+        #for building in Global.GameObjects.getWalls():
+        for building in Global.getGameTanks():
             if building.type != 5: continue
             if building.clan == self.target.clan: continue
 

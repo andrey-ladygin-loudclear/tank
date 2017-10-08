@@ -5,10 +5,11 @@ from cocos import director
 from cocos import scene
 
 from components import Global
+from components.Global import init_global_variables
 from components.Layers import Layers
 from components.MainSceneLayer import MainSceneLayer
 from components.Map import Map
-from components.Objects import init_global_variables, addGamePlayer, load_map
+from components.Objects import addGamePlayer, load_map
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener

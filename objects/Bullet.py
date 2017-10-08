@@ -1,8 +1,12 @@
 import math
 import random
+from time import time
+
 from cocos import actions
 from cocos import sprite
 from cocos.actions import Action, MoveBy
+
+from components import Global
 
 
 class Bullet(sprite.Sprite):
@@ -15,6 +19,25 @@ class Bullet(sprite.Sprite):
 
     def __init__(self, spriteName):
         super(Bullet, self).__init__(spriteName)
+
+    def update(self):
+        angle = self.rotation
+        curr_x, curr_y = self.start_position
+        time_delta = (time() - self.last_update_time)
+        new_x = self.speed * time_delta * math.cos(math.radians(angle - 180)) + curr_x
+        new_y = self.speed * time_delta * math.sin(math.radians(angle)) + curr_y
+        self.position = (new_x, new_y)
+
+    def exceededTheLengthLimit(self):
+        if self.getLength(self.start_position, self.position) > self.fireLength:
+            return True
+
+        return False
+
+    def getLength(self, point1, point2):
+        deltax = math.pow(point1[0] - point2[0], 2)
+        deltay = math.pow(point1[1] - point2[1], 2)
+        return math.sqrt(deltax + deltay)
 
     def update_position(self, x, y):
         cos_x = math.cos(math.radians(self.rotation - 180))
@@ -54,7 +77,7 @@ class Bullet(sprite.Sprite):
         #frames = [frame.image for frame in animation.frames]
 
     def destroy(self):
-        Global.GameLayers.removeBullet(self)
+        Global.Layers.removeBullet(self)
         pass
         #Global.GameLayers.removeAnimation(self)
         #if self in Global.GameLayers.bullets: Global.GameLayers.removeBullet(self)

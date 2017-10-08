@@ -13,21 +13,21 @@ class Collisions:
             return False
 
         if collisions:
-            for wall in Objects.getWalls():
+            for wall in Global.getGameWalls():
                 if wall in collisions:
                     return True
 
         return False
 
     @staticmethod
-    def checkWithObjects(object, parent_id = None):
+    def checkWithObjects(object, parent_id=None):
         try:
             collisions = Global.CollisionManager.objs_colliding(object)
         except AttributeError:
             return False
 
         if collisions:
-            for tank in Global.GameObjects.getTanks():
+            for tank in Global.getGameTanks():
                 if tank in collisions:
                     if parent_id and parent_id == tank.id: continue
 
@@ -35,7 +35,7 @@ class Collisions:
 
     @staticmethod
     def checkWithObjectsOLD(object, parent_id = None):
-        for player in Global.GameObjects.getTanks():
+        for player in Global.getGameTanks():
 
             if parent_id and parent_id == player.id: continue
 
@@ -57,7 +57,7 @@ class Collisions:
     def checkManualCollisionsWidthWalls(object):
         object_points = object.getPoints()
 
-        for wall in Global.GameObjects.getWalls():
+        for wall in Global.getGameWalls():
             wall_points = wall.getPoints()
 
             if Collisions.wallNearObject(object_points, wall_points):

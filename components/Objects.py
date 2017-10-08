@@ -1,72 +1,32 @@
-from os.path import join
 from random import random
-import json
 
 from cocos import sprite
 from pyglet.resource import ResourceNotFoundException
 
 from Landing.LandingObject import LandingObject
-from Landing.Tower import Tower
-from components.Map import Map
-from components.NetworkCodes import NetworkDataCodes
+
+from Landing.MiniGunTower import MiniGunTower
+from components import Global
 from helpers.TankHelper import TankHelper
 from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from movingHandlers.TowerMovingHandlers import TowerMovingHandlers
 from objects.Tank import Tank
 from objects.Wall import Wall
 
-last_id = 0
-walls = []
-all_walls = []
-tanks = []
-bullets = []
-Layers = None
-
-def init_global_variables(game_layers):
-    global Layers
-    Layers = game_layers
-
-def getWalls():
-    if len(walls): return walls
-
-    map = Map()
-    map.init_walls()
-
-    for wall in map.get_walls():
-        walls.append(wall.getObjectFromSelf())
-
-    return walls
-
-def getGameTanks():
-    return tanks
-
-def getGameBullets():
-    return bullets
-
-def getGameWalls():
-    return walls
-
-def addTankToObjectsAndSprites(tank):
-    tanks.append(tank)
-    Layers.addTank(tank)
 
 
-def get_map():
-    with open('map2/exportMap.json', 'r') as f:
-        read_data = f.read()
-
-    return json.loads(read_data)
 
 def load_map():
-    for wall in get_map():
+    for wall in Global.get_map():
         wall = LandingObject(wall)
-        wall.id = getNextId()
-        all_walls.append(wall)
+        wall.id = Global.getNextId()
+        Global.all_walls.append(wall)
 
         if wall.type != 0 and wall.type != 1:
-            walls.append(wall)
+            Global.walls.append(wall)
 
     set_walls()
+
 
 def add_background():
     name = 'assets/backgrounds/fill.png'
@@ -75,17 +35,17 @@ def add_background():
     spriteObj.position = (0, 0)
     spriteObj.type = 0
     spriteObj.image_anchor = (0, 0)
-    Layers.addWall(spriteObj)
+    Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = Tower(position=(300, 300))
+    tower = MiniGunTower(position=(300, 300))
     tower.do(TowerMovingHandlers())
-    Layers.addWall(tower, z=5)
+    Global.Layers.addWall(tower, z=5)
 
 def set_walls():
     add_background()
 
-    for wall in all_walls:
+    for wall in Global.all_walls:
         #src = wall.get(NetworkDataCodes.SRC).replace('assets/', 'assets/map/')
         src = wall.src.replace('assets/', 'assets/map/')
         type = wall.type
@@ -108,7 +68,7 @@ def set_walls():
         scale = wall.scale
         if scale: brick_wall.scale = scale
 
-        Layers.addWall(brick_wall, brick_wall.type)
+        Global.Layers.addWall(brick_wall, brick_wall.type)
 
     add_clans_objects()
 
@@ -137,7 +97,7 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
     tank = TankHelper.getTankByType(type)
     #tank = Tank()
     #tank = TankFactory.create(type)
-    tank.id = getNextId()
+    tank.id = Global.getNextId()
     tank.clan = clan
     # tank.setPosition(position)
     tank.position = position
@@ -148,15 +108,10 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
     if add_moving_handler:
         tank.do(DefaultTankMovingHandlers())
 
-    addTankToObjectsAndSprites(tank)
+    Global.addTankToObjectsAndSprites(tank)
 
     return tank.id
 
 def removeTankFromGame(tank):
     #if self in Global.GameObjects.getTanks(): Global.GameObjects.removeTank(self)
     pass
-
-def getNextId():
-    global last_id
-    last_id += 1
-    return last_id
