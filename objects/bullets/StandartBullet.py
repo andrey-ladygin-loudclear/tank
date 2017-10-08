@@ -30,10 +30,8 @@ class StandartBullet(Bullet):
 
     def destroy(self, position=None):
         super(StandartBullet, self).destroy()
-        # c = explosionStandartBulletAnimation2()
-        # c.appendAnimationToLayer((200,200), 90)
         return
-        animation = explosionStandartBulletAnimation()
+        #animation = explosionStandartBulletAnimation()
         #animation.appendAnimationToLayer(position, self.rotation)
-        animation.appendAnimationToLayer(position)
-        super(StandartBullet, self).destroy()
+        #animation.appendAnimationToLayer(position)
+        #super(StandartBullet, self).destroy()

@@ -16,7 +16,11 @@ from events.NetworkListener import NetworkListener
 
 
 def main():
-    createInterface(1, 1, None)
+    res = int(raw_input('1 - create new game, 2 - connect\n'))
+    if res == 1:
+        createInterface(1, 1, None)
+    else:
+        createInterface(2, 2, 'localhost')
     # res = int(raw_input('1 - create new game, 2 - connect\n'))
     # clan = raw_input('Select your clan: 1 or 2\n')
     # tanktype = int(raw_input('Select your tank type: 1 - 7\n'))
@@ -45,7 +49,7 @@ def createInterface(tanktype, clan, ip):
 
 
     if ip is None:
-        addGamePlayer(type=tanktype, clan=clan, add_moving_handler=True)
+        Global.CurrentPlayerId = addGamePlayer(type=tanktype, clan=clan, add_moving_handler=True)
         load_map()
 
         thread = Thread(target = Game.callUpdatePositions)
@@ -59,9 +63,14 @@ def createInterface(tanktype, clan, ip):
         thread = Thread(target = connectionsListenersPump)
         thread.setDaemon(True)
         thread.start()
-    else:
-        main_scene_layer.connections_listener = NetworkListener(ip, 1332, tanktype)
 
+        thread = Thread(target = Game.sendDataToPlayers)
+        thread.setDaemon(True)
+        thread.start()
+
+    else:
+        #main_scene_layer.connections_listener = NetworkListener(ip, 1332, tanktype)
+        Global.TankNetworkListenerConnection = NetworkListener(ip, 1332, tanktype)
 
     director.director.on_resize = main_scene_layer.resize
     director.director.window.push_handlers(Global.CurrentKeyboard)

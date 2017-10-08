@@ -1,11 +1,12 @@
-from objects.Tank import Tank
+from components import Global
+from helpers.TankHelper import TankHelper
 
 
 class TankFactory:
 
     @staticmethod
     def create(id=0, position=(0,0), type=type):
-        tank = Tank(type)
+        tank = TankHelper.getTankByType(type)
         tank.id = id
         tank.position = position
 
@@ -18,7 +19,7 @@ class TankFactory:
 
     @staticmethod
     def getOrCreate(id, type):
-        tank = Global.GameObjects.getTank(id)
+        tank = Global.getGameTank(id)
 
         if tank: return tank
 
@@ -26,7 +27,7 @@ class TankFactory:
 
     @staticmethod
     def get(id):
-        for tank in Global.GameObjects:
+        for tank in Global.getGameTanks():
             if tank.id == id:
                 return tank
 

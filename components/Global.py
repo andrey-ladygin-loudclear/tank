@@ -7,9 +7,11 @@ import cocos.collision_model as cm
 CurrentKeyboard = key.KeyStateHandler()
 CollisionManager = cm.CollisionManagerBruteForce()
 PullConnsctions = []
+TankNetworkListenerConnection = None
 
 Queue = []
 last_id = 0
+CurrentPlayerId = 0
 walls = []
 all_walls = []
 tanks = []
@@ -35,11 +37,26 @@ def init_global_variables(game_layers):
     global Layers
     Layers = game_layers
 
+def getGameTank(id):
+    for tank in getGameTanks():
+        if tank.id == id:
+            return tank
+
 def getGameTanks():
     return tanks
 
+def getGameBullet(id):
+    for bullet in getGameBullets():
+        if bullet.id == id:
+            return bullet
+
 def getGameBullets():
     return bullets
+
+def getGameWall(id):
+    for wall in getGameWalls():
+        if wall.id == id:
+            return wall
 
 def getGameWalls():
     return walls

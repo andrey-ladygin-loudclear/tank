@@ -12,19 +12,18 @@ from events.NetworkListener import NetworkListener
 class MainSceneLayer(cocos.layer.ScrollableLayer):
     is_event_handler = True
     help = None
-    connections_listener = None
 
     def __init__(self):
         super(MainSceneLayer, self).__init__()
         self.schedule(self.update)
 
     def update(self, dt):
-        if not self.connections_listener: return
+        if not Global.TankNetworkListenerConnection: return
 
         PodSixNet.Connection.connection.Pump()
 
-        if self.connections_listener:
-            self.connections_listener.Pump()
+        if Global.TankNetworkListenerConnection:
+            Global.TankNetworkListenerConnection.Pump()
 
     def resize(self, width, height):
         self.viewPoint = (width // 2, height // 2)

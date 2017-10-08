@@ -5,6 +5,7 @@ from PodSixNet.Server import Server
 
 from components import Global, Objects
 #from events.ClientChannel import ClientChannel
+from components.NetworkCodes import NetworkActions
 
 
 class Network(Server):
@@ -21,13 +22,15 @@ class Network(Server):
         index = Global.PullConnsctions.index(channel)
 
         channel.Send({
-            'action': Global.NetworkActions.INIT,
+            'action': NetworkActions.INIT,
             'connection_index': index
         })
 
+        walls = [wall.getObjectFromSelf() for wall in Global.all_walls]
+
         channel.Send({
-            'action': Global.NetworkActions.INIT,
-            'walls': Objects.getWalls(),
+            'action': NetworkActions.INIT,
+            'walls': walls,
         })
 
     def close(self):
