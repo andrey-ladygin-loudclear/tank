@@ -1,4 +1,5 @@
 import json
+from threading import Timer
 
 import pyglet
 from pyglet.window import key
@@ -53,6 +54,10 @@ def getGameBullet(id):
 def getGameBullets():
     return bullets
 
+def removeBullet(bullet):
+    Layers.removeBullet(bullet)
+    if bullet in bullets: bullets.remove(bullet)
+
 def getGameWall(id):
     for wall in getGameWalls():
         if wall.id == id:
@@ -60,6 +65,11 @@ def getGameWall(id):
 
 def getGameWalls():
     return walls
+
+def addnimationToGame(anim, duration):
+    Layers.addAnimation(anim)
+    t = Timer(duration, lambda: Layers.removeAnimation(anim))
+    t.start()
 
 def addTankToObjectsAndSprites(tank):
     CollisionManager.add(tank)

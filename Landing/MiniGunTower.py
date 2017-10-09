@@ -15,7 +15,7 @@ class MiniGunTower(sprite.Sprite):
     src = 'assets/towers/heavy-murder-final-turret-v2.png'
     weapon = None
     canFire = True
-    bulletFreezTime = 0.2
+    bulletFreezTime = 0.1
 
     def __init__(self, position=(0,0)):
         super(MiniGunTower, self).__init__(self.src)

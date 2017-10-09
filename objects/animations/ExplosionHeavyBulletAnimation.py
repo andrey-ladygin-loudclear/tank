@@ -3,6 +3,9 @@ from threading import Timer
 import pyglet
 from cocos import sprite
 
+from components import Global
+from components.Global import addnimationToGame
+
 
 class explosionHeavyBulletAnimation:
 
@@ -26,6 +29,6 @@ class explosionHeavyBulletAnimation:
 
     def appendAnimationToLayer(self, position, rotation):
         anim = self.getSprite(position, rotation)
-        Global.GameLayers.addAnimation(anim)
-        t = Timer(self.animation.get_duration(), lambda: Global.GameLayers.removeAnimation(anim))
-        t.start()
+        duration = self.animation.get_duration()
+
+        addnimationToGame(anim, duration)

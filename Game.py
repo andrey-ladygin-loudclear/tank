@@ -56,9 +56,9 @@ def createInterface(tanktype, clan, ip):
         thread.setDaemon(True)
         thread.start()
 
-        thread = Thread(target = Game.callCheckCollisions)
-        thread.setDaemon(True)
-        thread.start()
+        # thread = Thread(target = Game.callCheckCollisions)
+        # thread.setDaemon(True)
+        # thread.start()
 
         thread = Thread(target = connectionsListenersPump)
         thread.setDaemon(True)
@@ -70,7 +70,7 @@ def createInterface(tanktype, clan, ip):
 
     else:
         #main_scene_layer.connections_listener = NetworkListener(ip, 1332, tanktype)
-        Global.TankNetworkListenerConnection = NetworkListener(ip, 1332, tanktype)
+        Global.TankNetworkListenerConnection = NetworkListener(ip, 1332, tanktype, clan)
 
     director.director.on_resize = main_scene_layer.resize
     director.director.window.push_handlers(Global.CurrentKeyboard)

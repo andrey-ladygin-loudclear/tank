@@ -56,7 +56,10 @@ class Layers:
         self.walls.remove(wall)
 
     def removeAnimation(self, anim):
-        if anim in self.globalPanel: self.globalPanel.remove(anim)
+        try:
+            if anim in self.globalPanel: self.globalPanel.remove(anim)
+        except Exception:
+            pass
 
     def addBullet(self, bullet):
         self.bullets.add(bullet)

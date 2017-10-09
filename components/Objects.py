@@ -38,7 +38,7 @@ def add_background():
     Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = MiniGunTower(position=(300, 300))
+    tower = MiniGunTower(position=(700, 700))
     tower.do(TowerMovingHandlers())
     Global.Layers.addWall(tower, z=5)
 
@@ -93,11 +93,17 @@ def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
 
     return tank.id
 
-def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handler=False):
+def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handler=False, id=None):
+    print('call addGamePlayer')
     tank = TankHelper.getTankByType(type)
     #tank = Tank()
     #tank = TankFactory.create(type)
-    tank.id = Global.getNextId()
+
+    if id:
+        tank.id = id
+    else:
+        tank.id = Global.getNextId()
+
     tank.clan = clan
     # tank.setPosition(position)
     tank.position = position

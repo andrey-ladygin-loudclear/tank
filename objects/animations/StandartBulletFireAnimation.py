@@ -4,6 +4,7 @@ import pyglet
 from cocos import sprite
 
 from components import Global
+from components.Global import addnimationToGame
 
 
 class StandartBulletFireAnimation:
@@ -26,6 +27,6 @@ class StandartBulletFireAnimation:
 
     def appendAnimationToLayer(self, position, rotation):
         anim = self.getSprite(position, rotation)
-        Global.Layers.addAnimation(anim)
-        t = Timer(self.animation.get_duration(), lambda: Global.Layers.removeAnimation(anim))
-        t.start()
+        duration = self.animation.get_duration()
+
+        addnimationToGame(anim, duration)

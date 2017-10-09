@@ -39,8 +39,8 @@ class Tank(sprite.Sprite):
     clan = 0
     rotation_speed = 1
     gun_rotation_speed = 1
-    speed_acceleration = 1
-    max_speed = 20
+    speed_acceleration = 1.2
+    max_speed = 35
 
 
     def __init__(self):

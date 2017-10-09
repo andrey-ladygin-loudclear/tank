@@ -10,14 +10,16 @@ from components.Objects import addGamePlayer
 
 class ClientChannel(Channel):
     def Network(self, data):
-        #print data
+        print('Network Receive', data)
 
         if data.get('action') == NetworkActions.INIT:
             index = int(data.get('connection_index'))
             type = data.get('type')
+            clan = data.get('clan')
             channel = Global.PullConnsctions[index]
             #id = Global.game.addPlayer(type)
-            id = addGamePlayer(type=type, clan=2)
+            id = addGamePlayer(type=type, clan=clan)
+            print('addGamePlayer', id)
             channel.Send({
                 'action': NetworkActions.INIT,
                 'id': id

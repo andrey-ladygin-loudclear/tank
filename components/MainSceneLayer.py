@@ -6,6 +6,7 @@ from cocos.actions import MoveBy, FadeOut
 from pyglet.window import key
 
 from components import Global
+from events import Game
 from events.NetworkListener import NetworkListener
 
 
@@ -18,6 +19,8 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
         self.schedule(self.update)
 
     def update(self, dt):
+        Game.checkCollisions()
+
         if not Global.TankNetworkListenerConnection: return
 
         PodSixNet.Connection.connection.Pump()

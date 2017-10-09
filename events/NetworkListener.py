@@ -10,25 +10,27 @@ from events.Events import Events
 class NetworkListener(ConnectionListener):
     events = Events()
 
-    def __init__(self, host, port, type):
+    def __init__(self, host, port, type, clan):
         self.Connect((host, port))
         self.type = type
+        self.clan = clan
 
     def Network(self, update):
-        print(update)
+        #print(update)
         #print time(), update
 
         if update.get('action') == NetworkActions.INIT:
             if update.get('walls'):
                 self.events.set_walls(update.get('walls'))
 
-            if update.get('id'):
-                Global.CurrentPlayerId = update.get('id')
+            if update.get('id') and update.get('id'):
+                Global.CurrentPlayerId = int(update.get('id'))
 
             if update.get('connection_index', -1) != -1:
                 Global.TankNetworkListenerConnection.Send({
                     'action': NetworkActions.INIT,
                     'type': self.type,
+                    'clan': self.clan,
                     'connection_index': str(update.get('connection_index')),
                 })
 

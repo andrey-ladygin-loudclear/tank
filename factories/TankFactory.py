@@ -1,42 +1,29 @@
 from components import Global
+from components.Objects import addGamePlayer
 from helpers.TankHelper import TankHelper
 
 
 class TankFactory:
 
     @staticmethod
-    def create(id=0, position=(0,0), type=type):
-        tank = TankHelper.getTankByType(type)
-        tank.id = id
-        tank.position = position
+    def create(id=0, position=(0,0), type=1, clan=1, rotation=0):
+        add_moving_handler = False
 
-        # if tank.id == Global.CurrentPlayerId:
-        #     tank.do(LocalTankMovingHandlers())
-        #
-        # Global.GameObjects.addTank(tank)
+        if id == Global.CurrentPlayerId:
+            add_moving_handler = True
+
+        addGamePlayer(type, clan, position=(100, 100), rotation=rotation, add_moving_handler=add_moving_handler, id=id)
+        tank = Global.getGameTank(id)
+
         return tank
 
 
     @staticmethod
-    def getOrCreate(id, type):
+    def getOrCreate(id, type, clan, rotation):
+
         tank = Global.getGameTank(id)
+        print('Find Tank', id, tank)
 
         if tank: return tank
 
-        return TankFactory.create(id=id, type=type)
-
-    @staticmethod
-    def get(id):
-        for tank in Global.getGameTanks():
-            if tank.id == id:
-                return tank
-
-        return None
-
-    # @staticmethod
-    # def createTankByClass(tank_class):
-    #     if tank_class == 'ETank':
-    #         return ETank()
-    #
-    #     if tank_class == 'KVTank':
-    #         return KVTank()
+        return TankFactory.create(id=id, type=type, clan=clan, rotation=rotation)

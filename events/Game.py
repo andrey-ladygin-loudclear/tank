@@ -39,6 +39,7 @@ def updatePositions():
 
 
 def checkCollisions():
+
     for bullet in getGameBullets():
         #bullet.update()
         bullet.cshape = cm.AARectShape(bullet.position, 2, 2)
@@ -47,7 +48,7 @@ def checkCollisions():
             explosion = Explosion(bullet)
             explosion.checkDamageCollisions()
 
-            bullet.destroyEvent()
+            bullet.destroy()
 
     for tank in getGameTanks():
         if tank.health <= 0:

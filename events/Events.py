@@ -14,8 +14,11 @@ class Events():
         rotation = object.get(NetworkDataCodes.ROTATION)
         gun_rotation = object.get(NetworkDataCodes.GUN_ROTATION)
         type = object.get(NetworkDataCodes.TYPE)
+        clan = object.get(NetworkDataCodes.CLAN)
 
-        tank = TankFactory.getOrCreate(id, type)
+        print('Tank id', id)
+
+        tank = TankFactory.getOrCreate(id, type, clan, rotation)
 
         if id == Global.CurrentPlayerId: return
 

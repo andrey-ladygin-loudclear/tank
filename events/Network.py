@@ -4,12 +4,12 @@ from time import sleep
 from PodSixNet.Server import Server
 
 from components import Global, Objects
-#from events.ClientChannel import ClientChannel
+from events.ClientChannel import ClientChannel
 from components.NetworkCodes import NetworkActions
 
 
 class Network(Server):
-    #channelClass = ClientChannel
+    channelClass = ClientChannel
 
     def __init__(self, *args, **kwargs):
         Server.__init__(self, *args, **kwargs)

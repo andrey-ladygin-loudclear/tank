@@ -1,5 +1,6 @@
 import math
 import random
+from threading import Timer
 
 from cocos import sprite
 
@@ -8,12 +9,14 @@ from objects.weapons.LightWeapon import LightWeapon
 
 
 class Gun(sprite.Sprite):
-
     weapon1 = None
     weapon2 = None
 
     canFire = True
     canHeavyFire = True
+
+    bulletFreezTime = 0.15
+    heavyBulletFreezTime = 1
 
     tank = None
 
@@ -25,10 +28,19 @@ class Gun(sprite.Sprite):
         self.tank = tank
 
     def fireFirstWeapon(self):
-        self.weapon1.fire()
+        if self.canHeavyFire:
+            self.weapon1.fire()
+            self.canHeavyFire = False
+            Timer(self.heavyBulletFreezTime, self.acceptHeabyFire).start()
 
     def fireSecondWeapon(self):
-        self.weapon2.fire()
+        if self.canFire:
+            self.weapon2.fire()
+            self.canFire = False
+            Timer(self.bulletFreezTime, self.acceptFire).start()
 
     def getRotation(self):
         return self.rotation
+
+    def acceptFire(self): self.canFire = True
+    def acceptHeabyFire(self): self.canHeavyFire = True

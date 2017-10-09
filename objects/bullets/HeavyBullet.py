@@ -23,6 +23,9 @@ class HeavyBullet(Bullet):
         Global.GameLayers.removeAnimation(self)
 
     def destroy(self, position=None):
-        super(HeavyBullet, self).destroy()
+        if not position: position = self.position
+
         animation = explosionHeavyBulletAnimation()
         animation.appendAnimationToLayer(position, self.rotation)
+
+        super(HeavyBullet, self).destroy()

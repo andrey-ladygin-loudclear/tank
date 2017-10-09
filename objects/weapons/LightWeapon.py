@@ -3,7 +3,8 @@ import random
 import math
 from time import time
 
-from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
+from components.Global import addBulletToGame
+from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
 from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
 from objects.bullets.StandartBullet import StandartBullet
 
@@ -55,7 +56,7 @@ class LightWeapon:
         bullet.rotation = rotation
         bullet.last_update_time = last_update_time
 
-        Global.GameObjects.addBullet(bullet)
+        addBulletToGame(bullet)
         bullet.do(BulletMovingHandlers())
 
         animation = StandartBulletFireAnimation()

@@ -3,6 +3,8 @@ import random
 import math
 from time import time
 
+from components.Global import addBulletToGame
+from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
 from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
 from objects.bullets.HeavyBullet import HeavyBullet
 
@@ -44,7 +46,7 @@ class HeavyWeapon:
         bullet = HeavyBullet()
 
         if not position: position = self.firePosition()
-        if not rotation: rotation = self.fireRotation
+        if not rotation: rotation = self.fireRotation()
         if not last_update_time: last_update_time = time()
 
         bullet.id = id
@@ -54,7 +56,7 @@ class HeavyWeapon:
         bullet.rotation = rotation
         bullet.last_update_time = last_update_time
 
-        Global.GameObjects.addBullet(bullet)
+        addBulletToGame(bullet)
         bullet.do(BulletMovingHandlers())
 
         animation = HeavyBulletFireAnimation()

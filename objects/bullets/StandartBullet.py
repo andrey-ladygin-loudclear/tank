@@ -29,9 +29,9 @@ class StandartBullet(Bullet):
         # if self in Global.objects['bullets']: Global.objects['bullets'].remove(self)
 
     def destroy(self, position=None):
+        if not position: position = self.position
+
+        animation = explosionStandartBulletAnimation()
+        animation.appendAnimationToLayer(position)
+
         super(StandartBullet, self).destroy()
-        return
-        #animation = explosionStandartBulletAnimation()
-        #animation.appendAnimationToLayer(position, self.rotation)
-        #animation.appendAnimationToLayer(position)
-        #super(StandartBullet, self).destroy()
