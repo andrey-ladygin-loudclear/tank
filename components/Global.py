@@ -20,12 +20,28 @@ CurrentPlayerId = 0
 walls = []
 all_walls = []
 tanks = []
+objects = []
 bullets = []
 Layers = None
+
+connections_listener = None
+
+def addObjectToGame(object):
+    objects.append(object)
+    CollisionManager.add(object)
+    Layers.addObject(object)
 
 def addBulletToGame(bullet):
     bullets.append(bullet)
     Layers.addBullet(bullet)
+
+def getGameObjects():
+    return objects
+
+def getGameObject(id):
+    for obj in getGameObjects():
+        if obj.id == id:
+            return obj
 
 def addToQueue(event):
     global Queue
@@ -41,7 +57,6 @@ def clearQueue():
 def init_global_variables(game_layers):
     global Layers
     Layers = game_layers
-    # load_animations()
 
 def getGamePlayer():
     return getGameTank(CurrentPlayerId)
@@ -94,6 +109,19 @@ def getNextId():
     global last_id
     last_id += 1
     return last_id
+
+def setCurrentPlayerStats(id):
+    global CurrentPlayerId
+    CurrentPlayerId = id
+    Layers.init_panel_with_stats()
+
+def damageSomeObject(id, health, dmg):
+    tank = getGameTank(id)
+    tank.setHealth(health)
+    Layers.damage(dmg, tank.position)
+
+    if id == CurrentPlayerId:
+        Layers.setHealth(health)
 #
 # anim = None
 # animation = None

@@ -16,7 +16,7 @@ class NetworkListener(ConnectionListener):
         self.clan = clan
 
     def Network(self, update):
-        #print(update)
+        print(update)
         #print time(), update
 
         if update.get('action') == NetworkActions.INIT:

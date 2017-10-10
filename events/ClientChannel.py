@@ -6,9 +6,12 @@ from PodSixNet.Channel import Channel
 from components import Global
 from components.NetworkCodes import NetworkActions, NetworkDataCodes
 from components.Objects import addGamePlayer
+from events.Events import Events
 
 
 class ClientChannel(Channel):
+    events = Events()
+
     def Network(self, data):
         #print('Network Receive', data)
 
@@ -26,15 +29,13 @@ class ClientChannel(Channel):
                 'id': id
             })
 
-        tank = Global.getGameTank(data.get(NetworkDataCodes.TANK_ID))
-
         if data.get('action') == NetworkActions.TANK_MOVE:
+            tank = Global.getGameTank(data.get(NetworkDataCodes.TANK_ID))
             tank.update(data)
 
         if data.get('action') == NetworkActions.TANK_FIRE:
-            if data.get(NetworkDataCodes.TYPE) == NetworkDataCodes.HEAVY_BULLET:
-                tank.heavy_fire()
+            self.events.fire(data)
 
-            if data.get(NetworkDataCodes.TYPE) == NetworkDataCodes.STANDART_BULLET:
-                tank.fire()
+        if data.get('action') == NetworkActions.DAMAGE:
+            self.events.damage(data)
 

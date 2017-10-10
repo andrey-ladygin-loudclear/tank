@@ -27,15 +27,15 @@ class StandartBulletFireAnimation:
         self.anim.scale = 0.2
 
     def getAnimation(self):
-        return Global.animation
+        return self.animation
 
     def getSprite(self, position, rotation):
-        Global.anim.position = position
-        Global.anim.rotation = rotation - 180
-        return Global.anim
+        self.anim.position = position
+        self.anim.rotation = rotation - 180
+        return self.anim
 
     def appendAnimationToLayer(self, position, rotation):
         anim = self.getSprite(position, rotation)
-        duration = Global.animation.get_duration()
+        duration = self.animation.get_duration()
 
         addanimationToGame(anim, duration)

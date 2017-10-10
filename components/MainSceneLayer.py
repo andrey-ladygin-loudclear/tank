@@ -16,6 +16,7 @@ from events.NetworkListener import NetworkListener
 class MainSceneLayer(cocos.layer.ScrollableLayer):
     is_event_handler = True
     help = None
+    label = None
 
     def __init__(self):
         super(MainSceneLayer, self).__init__()
@@ -24,6 +25,8 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
     def update(self, dt):
         if Global.IsGeneralServer:
             Game.checkCollisions()
+
+            if Global.connections_listener: Global.connections_listener.Pump()
         else:
             PodSixNet.Connection.connection.Pump()
             Global.TankNetworkListenerConnection.Pump()
@@ -67,7 +70,7 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
         #     type = self.selectTank()
         #     if type: self.connectToServer(type)
 
-        #Global.GameLayers.stats.changleStatsPosition(-x, -y, self.currentWidth, self.currentHeight)
+        self.changleStatsPosition(-x, -y, self.currentWidth, self.currentHeight)
 
     def connectToServer(self, type):
         self.remove(self.help)
@@ -75,20 +78,19 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
         Global.TankNetworkListenerConnection = NetworkListener('localhost', 1332, type)
         self.TankNetworkListenerConnection = Global.TankNetworkListenerConnection
 
-
-    label = None
-
-    # def __init__(self):
-    #     self.label = cocos.text.Label(
-    #         '100',
-    #         font_name='Helvetica',
-    #         font_size=16,
-    #         anchor_x='left',  anchor_y='top'
-    #     )
-    #     Global.GameLayers.globalPanel.add(self.label)
-
     def changleStatsPosition(self, x, y, width, height):
-        self.label.position = (x, y + height)
+        if self.label:
+            self.label.position = (x, y + height)
+
+    def init_panel_with_stats(self):
+        self.label = cocos.text.Label(
+            str(getGamePlayer().health),
+            font_name='Helvetica',
+            font_size=16,
+            anchor_x='left',  anchor_y='top'
+        )
+
+        Global.Layers.globalPanel.add(self.label)
 
     def setHealth(self, health):
         self.label.element.text = str(int(round(health)))
@@ -102,8 +104,8 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
             anchor_x='center',  anchor_y='center'
         )
         label.position = position
-        Global.GameLayers.globalPanel.add(label)
+        Global.Layers.globalPanel.add(label)
         label.do(MoveBy((0, 100), 2) | FadeOut(2))
 
-        t = Timer(2000, lambda: Global.GameLayers.globalPanel.remove(label))
+        t = Timer(2000, lambda: Global.Layers.globalPanel.remove(label))
         t.start()

@@ -109,6 +109,8 @@ class Tank(sprite.Sprite):
 
         self.health -= dmg
 
+        Global.damageSomeObject(id=self.id, dmg=dmg, health=self.health)
+
         Global.Queue.append({
             "action": NetworkActions.DAMAGE,
             NetworkDataCodes.TYPE: NetworkDataCodes.TANK,

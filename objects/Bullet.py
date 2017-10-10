@@ -82,12 +82,8 @@ class Bullet(sprite.Sprite):
         #animation = pyglet.image.load_animation('animation.gif')
         #frames = [frame.image for frame in animation.frames]
 
-    def destroy(self):
+    def destroy(self, position=None):
         removeBullet(self)
-        # addToQueue({
-        #     'action': NetworkDataCodes.BULLET,
-        #     'walls': walls,
-        # })
 
     def getObjectFromSelf(self):
         return {

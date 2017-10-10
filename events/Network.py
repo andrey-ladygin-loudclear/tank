@@ -26,12 +26,12 @@ class Network(Server):
             'connection_index': index
         })
 
-        walls = [wall.getObjectFromSelf() for wall in Global.all_walls]
-
-        channel.Send({
-            'action': NetworkActions.INIT,
-            'walls': walls,
-        })
+        # walls = [wall.getObjectFromSelf() for wall in Global.all_walls]
+        #
+        # channel.Send({
+        #     'action': NetworkActions.INIT,
+        #     'walls': walls,
+        # })
 
     def close(self):
         Server.close(self)

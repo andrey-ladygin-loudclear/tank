@@ -13,6 +13,7 @@ class NetworkDataCodes:
     ID = 'i'
     BULLET_ID = 'bi'
     TANK_ID = 'ti'
+    OBJECT_ID = 'oi'
     HEALTH = 'h'
     DAMAGE = 'd'
     PARENT_ID = 'pi'

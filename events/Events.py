@@ -3,6 +3,7 @@ from pyglet.resource import ResourceNotFoundException
 from components import Global
 from components.NetworkCodes import NetworkDataCodes
 from factories.BulletFactory import BulletFactory
+from factories.ObjectFactory import ObjectFactory
 from factories.TankFactory import TankFactory
 from objects.Wall import Wall
 from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
@@ -14,6 +15,20 @@ from objects.bullets.StandartBullet import StandartBullet
 class Events():
 
     def update(self, object):
+        if object.get(NetworkDataCodes.TANK_ID):
+            self.updateTank(object)
+        if object.get(NetworkDataCodes.OBJECT_ID):
+            self.updateObject(object)
+
+    def updateObject(self, object):
+        id = object.get(NetworkDataCodes.OBJECT_ID)
+        position = object.get(NetworkDataCodes.POSITION)
+        rotation = object.get(NetworkDataCodes.ROTATION)
+        clan = object.get(NetworkDataCodes.CLAN)
+
+        ObjectFactory.getOrCreate(id=id, position=position, rotation=rotation, clan=clan)
+
+    def updateTank(self, object):
         id = object.get(NetworkDataCodes.TANK_ID)
         position = object.get(NetworkDataCodes.POSITION)
         rotation = object.get(NetworkDataCodes.ROTATION)
@@ -71,13 +86,14 @@ class Events():
         dmg = object.get(NetworkDataCodes.DAMAGE)
         health = object.get(NetworkDataCodes.HEALTH)
 
-        tank = Global.getGameTank(id)
-        tank.setHealth(health)
-        Global.Layers.stats.damage(dmg, tank.position)
-
-        if id == Global.CurrentPlayerId:
-            health = object.get(NetworkDataCodes.HEALTH)
-            Global.Layers.stats.setHealth(health)
+        Global.damageSomeObject(id=id, dmg=dmg, health=health)
+        # tank = Global.getGameTank(id)
+        # tank.setHealth(health)
+        # Global.Layers.damage(dmg, tank.position)
+        #
+        # if id == Global.CurrentPlayerId:
+        #     # health = object.get(NetworkDataCodes.HEALTH)
+        #     Global.Layers.setHealth(health)
 
     def destroy(self, object):
         if object.get(NetworkDataCodes.TYPE) == NetworkDataCodes.WALL:

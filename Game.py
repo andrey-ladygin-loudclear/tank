@@ -5,7 +5,7 @@ from cocos import director
 from cocos import scene
 
 from components import Global
-from components.Global import init_global_variables
+from components.Global import init_global_variables, setCurrentPlayerStats
 from components.Layers import Layers
 from components.MainSceneLayer import MainSceneLayer
 from components.Map import Map
@@ -49,10 +49,11 @@ def createInterface(tanktype, clan, ip):
     game_layers = Layers(main_scene_layer)
     init_global_variables(game_layers)
 
+    load_map()
 
     if ip is None:
-        Global.CurrentPlayerId = addGamePlayer(type=tanktype, clan=clan, position=(150, 150), add_moving_handler=True)
-        load_map()
+        playerId = addGamePlayer(type=tanktype, clan=clan, position=(150, 150), add_moving_handler=True)
+        setCurrentPlayerStats(playerId)
 
         thread = Thread(target = Game.callUpdatePositions)
         thread.setDaemon(True)
@@ -79,10 +80,10 @@ def createInterface(tanktype, clan, ip):
     director.director.run(main_scene)
 
 def connectionsListenersPump():
-    connections_listener = Network(localaddr=('localhost', 1332))
+    Global.connections_listener = Network(localaddr=('localhost', 1332))
 
     while True:
-        connections_listener.Pump()
+        # connections_listener.Pump()
         sleep(0.0001)
 
 #

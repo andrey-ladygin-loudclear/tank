@@ -33,25 +33,9 @@ class Collisions:
 
                     return True
 
-    @staticmethod
-    def checkWithObjectsOLD(object, parent_id = None):
-        for player in Global.getGameTanks():
-
-            if parent_id and parent_id == player.id: continue
-
-            player_points = player.getPoints()
-            if Collisions.check(player_points, object.position):
-                return True
-
-        # for enemy in Global.objects['enemies']:
-        #
-        #     if parent_id == enemy.id: continue
-        #
-        #     enemy_points = enemy.getPoints()
-        #     if Collisions.check(enemy_points, object.position):
-        #         return True
-
-        return False
+            for obj in Global.getGameObjects():
+                if obj in collisions:
+                    return True
 
     @staticmethod
     def checkManualCollisionsWidthWalls(object):

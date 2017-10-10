@@ -15,6 +15,9 @@ class TankFactory:
         addGamePlayer(type, clan, position=(100, 100), rotation=rotation, add_moving_handler=add_moving_handler, id=id)
         tank = Global.getGameTank(id)
 
+        if id == Global.CurrentPlayerId:
+            Global.Layers.init_panel_with_stats()
+
         return tank
 
 

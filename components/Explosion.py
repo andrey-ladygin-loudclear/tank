@@ -39,6 +39,11 @@ class Explosion():
                 if player in damage_collisions:
                     player.damage(self.bullet)
 
+
+            for obj in Global.getGameObjects():
+                if obj in damage_collisions:
+                    obj.damage(self.bullet)
+
             # for enemy in Global.objects['enemies']:
             #     if enemy in damage_collisions:
             #         enemy.damage(self.bullet)

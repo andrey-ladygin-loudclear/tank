@@ -7,6 +7,7 @@ from Landing.LandingObject import LandingObject
 
 from Landing.MiniGunTower import MiniGunTower
 from components import Global
+from components.Global import addObjectToGame
 from helpers.TankHelper import TankHelper
 from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from movingHandlers.TowerMovingHandlers import TowerMovingHandlers
@@ -40,7 +41,7 @@ def add_background():
 def add_clans_objects():
     tower = MiniGunTower(position=(700, 700))
     tower.do(TowerMovingHandlers())
-    Global.Layers.addWall(tower, z=5)
+    addObjectToGame(tower)
 
 def set_walls():
     add_background()
@@ -71,9 +72,6 @@ def set_walls():
         Global.Layers.addWall(brick_wall, brick_wall.type)
 
     add_clans_objects()
-
-def sendFireEvent(code):
-    pass
 
 def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
     tank = Tank()

@@ -5,7 +5,9 @@ from components import Global
 from components import NetworkCodes
 from components.Collisions import Collisions
 from components.Explosion import Explosion
-from components.Global import addToQueue, getAllQueue, clearQueue, getGameTanks, getGameBullets, getGameWalls
+from components.Global import addToQueue, getAllQueue, clearQueue, getGameTanks, getGameBullets, getGameWalls, \
+    getGameObjects
+from events.Actions import SendDestroyBulletEvent
 
 
 def callUpdatePositions():
@@ -35,6 +37,9 @@ def updatePositions():
 
         batch['objects'].append(tank.getObjectFromSelf())
 
+    for obj in getGameObjects():
+        batch['objects'].append(obj.getObjectFromSelf())
+
     addToQueue(batch)
 
 
@@ -44,11 +49,15 @@ def checkCollisions():
         #bullet.update()
         bullet.cshape = cm.AARectShape(bullet.position, 2, 2)
 
-        if Collisions.checkWithWalls(bullet) or Collisions.checkWithObjects(bullet, bullet.parent_id) or bullet.exceededTheLengthLimit():
+        if Collisions.checkWithWalls(bullet) \
+                or Collisions.checkWithObjects(bullet, bullet.parent_id) \
+                or bullet.exceededTheLengthLimit():
+
             explosion = Explosion(bullet)
             explosion.checkDamageCollisions()
 
             bullet.destroy()
+            SendDestroyBulletEvent(bullet)
 
     for tank in getGameTanks():
         if tank.health <= 0:
@@ -57,6 +66,10 @@ def checkCollisions():
     for wall in getGameWalls():
         if wall.health <= 0:
             wall.destroy()
+
+    for obj in getGameObjects():
+        if obj.health <= 0:
+            obj.destroy()
 
 def sendAllTanksToClients():
     for player in getGameTanks():

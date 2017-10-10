@@ -8,26 +8,41 @@ class Layers:
     globalPanel = None
     stats = None
     walls = []
+    objects = []
     backgrounds = []
     bullets = []
     tanks = None
 
+    main_scene = None
+
     def __init__(self, main_scene):
         self.bullets = BatchNode()
         self.walls = BatchNode()
+        self.objects = BatchNode()
         self.backgrounds = BatchNode()
         self.tanks = BatchNode()
 
         #main_scene = get_main_scene_layer()
-        main_scene.add(self.backgrounds, z=0)
-        main_scene.add(self.bullets, z=1)
-        main_scene.add(self.walls)
-        main_scene.add(self.tanks)
+        self.main_scene = main_scene
+        self.main_scene.add(self.backgrounds, z=0)
+        self.main_scene.add(self.bullets, z=1)
+        self.main_scene.add(self.walls)
+        self.main_scene.add(self.objects)
+        self.main_scene.add(self.tanks)
 
         self.globalPanel = cocos.layer.Layer()
-        main_scene.add(self.globalPanel, z=1)
+        self.main_scene.add(self.globalPanel, z=1)
 
         # self.stats = StatsLayer()
+
+    def init_panel_with_stats(self):
+        self.main_scene.init_panel_with_stats()
+
+    def setHealth(self, health):
+        self.main_scene.setHealth(health)
+
+    def damage(self, damage, position):
+        self.main_scene.damage(damage, position)
 
     def addElement(self, item, time=0):
         self.globalPanel.add(item)
@@ -48,6 +63,12 @@ class Layers:
 
     def addAnimation(self, anim):
         self.globalPanel.add(anim)
+
+    def addObject(self, someobject, z=0):
+        self.objects.add(someobject, z=z)
+
+    def removeObject(self, someobject):
+        self.objects.remove(someobject)
 
     def addWall(self, wall, z=0):
         self.walls.add(wall, z=z)
