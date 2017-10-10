@@ -72,6 +72,9 @@ def set_walls():
 
     add_clans_objects()
 
+def sendFireEvent(code):
+    pass
+
 def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
     tank = Tank()
     tank.id = self.getNextId()
@@ -94,10 +97,7 @@ def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
     return tank.id
 
 def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handler=False, id=None):
-    print('call addGamePlayer')
-    tank = TankHelper.getTankByType(type)
-    #tank = Tank()
-    #tank = TankFactory.create(type)
+    tank = TankHelper.getTankByType(int(type))
 
     if id:
         tank.id = id
@@ -105,11 +105,9 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
         tank.id = Global.getNextId()
 
     tank.clan = clan
-    # tank.setPosition(position)
     tank.position = position
     tank.rotation = rotation
     #self.sendAllTanksToClients()
-    #if tank.id == Global.CurrentPlayerId:
 
     if add_moving_handler:
         tank.do(DefaultTankMovingHandlers())
@@ -117,7 +115,3 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
     Global.addTankToObjectsAndSprites(tank)
 
     return tank.id
-
-def removeTankFromGame(tank):
-    #if self in Global.GameObjects.getTanks(): Global.GameObjects.removeTank(self)
-    pass

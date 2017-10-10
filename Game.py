@@ -39,6 +39,8 @@ def createInterface(tanktype, clan, ip):
 
     # Create a scene and set its initial layer.
 
+    if ip is None:
+        Global.IsGeneralServer = True
 
     main_scene_layer = MainSceneLayer()
     main_scene = scene.Scene(main_scene_layer)
@@ -49,7 +51,7 @@ def createInterface(tanktype, clan, ip):
 
 
     if ip is None:
-        Global.CurrentPlayerId = addGamePlayer(type=tanktype, clan=clan, add_moving_handler=True)
+        Global.CurrentPlayerId = addGamePlayer(type=tanktype, clan=clan, position=(150, 150), add_moving_handler=True)
         load_map()
 
         thread = Thread(target = Game.callUpdatePositions)

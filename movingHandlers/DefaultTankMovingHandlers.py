@@ -6,6 +6,7 @@ import cocos.collision_model as cm
 from pyglet.window import key
 
 from components import Global
+from components.NetworkCodes import NetworkActions
 
 
 class DefaultTankMovingHandlers(actions.Move):
@@ -40,15 +41,16 @@ class DefaultTankMovingHandlers(actions.Move):
         moving_directions = Global.CurrentKeyboard[self.UP] - Global.CurrentKeyboard[self.DOWN]
         gun_turns_direction = Global.CurrentKeyboard[self.GUN_RIGHT] - Global.CurrentKeyboard[self.GUN_LEFT]
 
-        # if turns_direction or moving_directions or gun_turns_direction:
-        #     Global.TankNetworkListenerConnection.Send({
-        #         'action': Global.NetworkActions.TANK_MOVE,
-        #         'pos': self.target.position,
-        #         'turn': turns_direction,
-        #         'mov': moving_directions,
-        #         'gun_turn': gun_turns_direction,
-        #         'id': self.target.id
-        #     })
+        # if Global.TankNetworkListenerConnection:
+        #     if turns_direction or moving_directions or gun_turns_direction:
+        #         Global.TankNetworkListenerConnection.Send({
+        #             'action': NetworkActions.TANK_MOVE,
+        #             'position': self.target.position,
+        #             'turn': turns_direction,
+        #             'mov': moving_directions,
+        #             'gun_turn': gun_turns_direction,
+        #             'id': self.target.id
+        #         })
 
         if Global.CurrentKeyboard[self.FIRE_LIGHT_GUN]:
             self.target.fire()

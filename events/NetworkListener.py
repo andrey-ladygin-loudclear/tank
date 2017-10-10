@@ -3,7 +3,7 @@ from time import time
 from PodSixNet.Connection import ConnectionListener, connection
 
 from components import Global
-from components.NetworkCodes import NetworkActions
+from components.NetworkCodes import NetworkActions, NetworkDataCodes
 from events.Events import Events
 
 
@@ -29,8 +29,8 @@ class NetworkListener(ConnectionListener):
             if update.get('connection_index', -1) != -1:
                 Global.TankNetworkListenerConnection.Send({
                     'action': NetworkActions.INIT,
-                    'type': self.type,
-                    'clan': self.clan,
+                    NetworkDataCodes.TYPE: self.type,
+                    NetworkDataCodes.CLAN: self.clan,
                     'connection_index': str(update.get('connection_index')),
                 })
 

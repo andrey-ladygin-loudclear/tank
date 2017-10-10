@@ -22,7 +22,6 @@ class TankFactory:
     def getOrCreate(id, type, clan, rotation):
 
         tank = Global.getGameTank(id)
-        print('Find Tank', id, tank)
 
         if tank: return tank
 

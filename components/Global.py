@@ -2,13 +2,17 @@ import json
 from threading import Timer
 
 import pyglet
+from cocos import sprite
 from pyglet.window import key
 import cocos.collision_model as cm
+
+from components.NetworkCodes import NetworkActions
 
 CurrentKeyboard = key.KeyStateHandler()
 CollisionManager = cm.CollisionManagerBruteForce()
 PullConnsctions = []
 TankNetworkListenerConnection = None
+IsGeneralServer = False
 
 Queue = []
 last_id = 0
@@ -37,6 +41,10 @@ def clearQueue():
 def init_global_variables(game_layers):
     global Layers
     Layers = game_layers
+    # load_animations()
+
+def getGamePlayer():
+    return getGameTank(CurrentPlayerId)
 
 def getGameTank(id):
     for tank in getGameTanks():
@@ -66,7 +74,7 @@ def getGameWall(id):
 def getGameWalls():
     return walls
 
-def addnimationToGame(anim, duration):
+def addanimationToGame(anim, duration):
     Layers.addAnimation(anim)
     t = Timer(duration, lambda: Layers.removeAnimation(anim))
     t.start()
@@ -86,5 +94,15 @@ def getNextId():
     global last_id
     last_id += 1
     return last_id
-
-
+#
+# anim = None
+# animation = None
+#
+# def load_animations():
+#     global anim, animation
+#     explosion = pyglet.image.load('assets/weapons/fire-small-gun.png')
+#     explosion_seq = pyglet.image.ImageGrid(explosion, 1, 3)
+#     explosion_tex_seq = pyglet.image.TextureGrid(explosion_seq)
+#     animation = pyglet.image.Animation.from_image_sequence(explosion_tex_seq, .02, loop=False)
+#     anim = sprite.Sprite(animation)
+#     anim.scale = 0.2

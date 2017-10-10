@@ -68,17 +68,22 @@ class Tank(sprite.Sprite):
         # self.Gun.position = self.position
         # self.Gun.rotation = self.rotation + self.Gun.gun_rotation
 
+    def update(self, data):
+        self.position = data.get(NetworkDataCodes.POSITION)
+        self.gun_rotation = data.get(NetworkDataCodes.GUN_ROTATION)
+        self.rotation = data.get(NetworkDataCodes.ROTATION)
+
     def updateHealthPosition(self):
         if self.healthHelper: self.healthHelper.updateHealthPosition(self.position)
 
     def setHealth(self, health):
         self.healthHelper.setHealth(health)
 
-    def heavy_fire(self):
-        self.Gun.fireFirstWeapon()
+    def heavy_fire(self, bullet=None):
+        self.Gun.fireFirstWeapon(bullet)
 
-    def fire(self):
-        self.Gun.fireSecondWeapon()
+    def fire(self, bullet=None):
+        self.Gun.fireSecondWeapon(bullet)
 
     def destroy(self):
         animation = ExplosionTankAnimation()
@@ -107,7 +112,7 @@ class Tank(sprite.Sprite):
         Global.Queue.append({
             "action": NetworkActions.DAMAGE,
             NetworkDataCodes.TYPE: NetworkDataCodes.TANK,
-            NetworkDataCodes.ID: self.id,
+            NetworkDataCodes.TANK_ID: self.id,
             NetworkDataCodes.HEALTH: self.health,
             NetworkDataCodes.DAMAGE: dmg
         })
@@ -128,7 +133,7 @@ class Tank(sprite.Sprite):
 
         return {
             'action': NetworkCodes.NetworkActions.UPDATE,
-            NetworkCodes.NetworkDataCodes.ID: self.id,
+            NetworkCodes.NetworkDataCodes.TANK_ID: self.id,
             NetworkCodes.NetworkDataCodes.POSITION: (int(x), int(y)),
             NetworkCodes.NetworkDataCodes.ROTATION: int(r),
             NetworkCodes.NetworkDataCodes.GUN_ROTATION: int(gr),

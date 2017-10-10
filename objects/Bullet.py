@@ -8,7 +8,7 @@ from cocos.actions import Action, MoveBy
 
 from components import Global
 from components.Global import addToQueue, removeBullet
-from components.NetworkCodes import NetworkActions
+from components.NetworkCodes import NetworkActions, NetworkDataCodes
 
 
 class Bullet(sprite.Sprite):
@@ -18,6 +18,10 @@ class Bullet(sprite.Sprite):
     #damageRadius = 20
     #velocity = (0, 0)
     #fireLength = 1000
+
+    id = 0
+    animation_position = (0,0)
+    animation_rotation = 0
 
     def __init__(self, spriteName):
         super(Bullet, self).__init__(spriteName)
@@ -84,6 +88,19 @@ class Bullet(sprite.Sprite):
         #     'action': NetworkDataCodes.BULLET,
         #     'walls': walls,
         # })
+
+    def getObjectFromSelf(self):
+        return {
+            'action': Global.NetworkActions.TANK_FIRE,
+            NetworkDataCodes.LAST_UPDATE_TIME: str(self.last_update_time),
+            NetworkDataCodes.BULLET_ID: self.id,
+            NetworkDataCodes.TANK_ID: self.parent_id,
+            NetworkDataCodes.POSITION: self.position,
+            NetworkDataCodes.ROTATION: self.rotation,
+            NetworkDataCodes.TYPE: self.type,
+            NetworkDataCodes.ANIMATION_POSITION: self.animation_position,
+            NetworkDataCodes.ANIMATION_ROTATION: self.animation_rotation,
+        }
 
 class removeAfterComplete(Action):
     def step(self, dt):

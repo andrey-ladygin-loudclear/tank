@@ -10,31 +10,31 @@ from components.Objects import addGamePlayer
 
 class ClientChannel(Channel):
     def Network(self, data):
-        print('Network Receive', data)
+        #print('Network Receive', data)
 
         if data.get('action') == NetworkActions.INIT:
             index = int(data.get('connection_index'))
-            type = data.get('type')
-            clan = data.get('clan')
+            type = data.get(NetworkDataCodes.TYPE)
+            clan = data.get(NetworkDataCodes.CLAN)
+
             channel = Global.PullConnsctions[index]
-            #id = Global.game.addPlayer(type)
-            id = addGamePlayer(type=type, clan=clan)
-            print('addGamePlayer', id)
+
+            id = addGamePlayer(type=type, clan=clan, position=(200, 100))
+
             channel.Send({
                 'action': NetworkActions.INIT,
                 'id': id
             })
 
-        for player in Global.getGameTanks():
-            if player.id == data.get('id'):
+        tank = Global.getGameTank(data.get(NetworkDataCodes.TANK_ID))
 
-                if data.get('action') == NetworkActions.TANK_MOVE:
-                    player.update(data)
+        if data.get('action') == NetworkActions.TANK_MOVE:
+            tank.update(data)
 
-                if data.get('action') == NetworkActions.TANK_FIRE:
-                    if data.get('type') == NetworkDataCodes.HEAVY_BULLET:
-                        player.heavy_fire()
+        if data.get('action') == NetworkActions.TANK_FIRE:
+            if data.get(NetworkDataCodes.TYPE) == NetworkDataCodes.HEAVY_BULLET:
+                tank.heavy_fire()
 
-                    if data.get('type') == NetworkDataCodes.STANDART_BULLET:
-                        player.fire()
+            if data.get(NetworkDataCodes.TYPE) == NetworkDataCodes.STANDART_BULLET:
+                tank.fire()
 

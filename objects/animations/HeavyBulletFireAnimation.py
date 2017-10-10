@@ -3,8 +3,7 @@ from threading import Timer
 import pyglet
 from cocos import sprite
 
-from components import Global
-from components.Global import addnimationToGame
+from components.Global import addanimationToGame
 
 
 class HeavyBulletFireAnimation:
@@ -29,4 +28,4 @@ class HeavyBulletFireAnimation:
         anim = self.getSprite(position, rotation)
         duration = self.animation.get_duration()
 
-        addnimationToGame(anim, duration)
+        addanimationToGame(anim, duration)

@@ -37,9 +37,9 @@ class Layers:
             t.start()
 
     def addTank(self, tank):
-        self.tanks.add(tank)
-        self.tanks.add(tank.Gun)
-        self.tanks.add(tank.healthHelper)
+        self.tanks.add(tank, z=2)
+        self.tanks.add(tank.Gun, z=2)
+        self.tanks.add(tank.healthHelper, z=2)
 
     def removeTank(self, tank):
         self.tanks.remove(tank)

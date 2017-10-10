@@ -6,6 +6,9 @@ from cocos.actions import MoveBy, FadeOut
 from pyglet.window import key
 
 from components import Global
+from components import NetworkCodes
+from components.Global import getGamePlayer
+from components.NetworkCodes import NetworkActions, NetworkDataCodes
 from events import Game
 from events.NetworkListener import NetworkListener
 
@@ -19,14 +22,24 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
         self.schedule(self.update)
 
     def update(self, dt):
-        Game.checkCollisions()
-
-        if not Global.TankNetworkListenerConnection: return
-
-        PodSixNet.Connection.connection.Pump()
-
-        if Global.TankNetworkListenerConnection:
+        if Global.IsGeneralServer:
+            Game.checkCollisions()
+        else:
+            PodSixNet.Connection.connection.Pump()
             Global.TankNetworkListenerConnection.Pump()
+            self.sendDataToServer()
+
+    def sendDataToServer(self):
+        player = getGamePlayer()
+
+        if player:
+            Global.TankNetworkListenerConnection.Send({
+                'action': NetworkActions.TANK_MOVE,
+                NetworkDataCodes.POSITION: player.position,
+                NetworkDataCodes.GUN_ROTATION: player.gun_rotation,
+                NetworkDataCodes.ROTATION: player.rotation,
+                NetworkDataCodes.TANK_ID: player.id
+            })
 
     def resize(self, width, height):
         self.viewPoint = (width // 2, height // 2)

@@ -1,11 +1,7 @@
 import random
-
-import math
 from time import time
-
 from components import Global
 from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
-from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
 from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
 from objects.bullets.StandartBullet import StandartBullet
 

@@ -27,15 +27,15 @@ class Gun(sprite.Sprite):
         self.weapon2 = LightWeapon(self)
         self.tank = tank
 
-    def fireFirstWeapon(self):
+    def fireFirstWeapon(self, bullet=None):
         if self.canHeavyFire:
-            self.weapon1.fire()
+            self.weapon1.fire(bullet)
             self.canHeavyFire = False
             Timer(self.heavyBulletFreezTime, self.acceptHeabyFire).start()
 
-    def fireSecondWeapon(self):
+    def fireSecondWeapon(self, bullet=None):
         if self.canFire:
-            self.weapon2.fire()
+            self.weapon2.fire(bullet)
             self.canFire = False
             Timer(self.bulletFreezTime, self.acceptFire).start()
 
