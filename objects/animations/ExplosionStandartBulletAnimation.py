@@ -4,6 +4,8 @@ from cocos import sprite
 from pyglet.image import load_animation
 
 from components import Global
+from components.Global import addanimationToGame
+from objects.animations.AnimationTypes import OnceAnimation
 
 
 class explosionStandartBulletAnimation(sprite.Sprite):
@@ -16,7 +18,8 @@ class explosionStandartBulletAnimation(sprite.Sprite):
 
         super(explosionStandartBulletAnimation, self).__init__(self.animation)
 
-        self.anim = sprite.Sprite(self.animation)
+        # self.anim = sprite.Sprite(self.animation)
+        self.anim = OnceAnimation(self.animation)
         self.anim.image_anchor = (self.animation.get_max_width() / 2, self.animation.get_max_height() / 4)
         self.anim.scale = 0.2
 
@@ -25,6 +28,8 @@ class explosionStandartBulletAnimation(sprite.Sprite):
 
     def appendAnimationToLayer(self, position):
         self.anim.position = position
-        Global.Layers.addAnimation(self.anim)
-        t = Timer(self.animation.get_duration(), lambda: Global.Layers.removeAnimation(self.anim))
-        t.start()
+
+        addanimationToGame(self.anim)
+        # Global.Layers.addAnimation(self.anim)
+        # t = Timer(self.animation.get_duration(), lambda: Global.Layers.removeAnimation(self.anim))
+        # t.start()

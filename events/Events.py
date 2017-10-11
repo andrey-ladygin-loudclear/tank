@@ -2,6 +2,7 @@ from pyglet.resource import ResourceNotFoundException
 
 from components import Global
 from components.NetworkCodes import NetworkDataCodes
+from factories.AnimationFactory import AnimationFactory
 from factories.BulletFactory import BulletFactory
 from factories.ObjectFactory import ObjectFactory
 from factories.TankFactory import TankFactory
@@ -17,6 +18,7 @@ class Events():
     def update(self, object):
         if object.get(NetworkDataCodes.TANK_ID):
             self.updateTank(object)
+
         if object.get(NetworkDataCodes.OBJECT_ID):
             self.updateObject(object)
 
@@ -35,8 +37,9 @@ class Events():
         gun_rotation = object.get(NetworkDataCodes.GUN_ROTATION)
         type = object.get(NetworkDataCodes.TYPE)
         clan = object.get(NetworkDataCodes.CLAN)
+        bot = object.get(NetworkDataCodes.BOT)
 
-        tank = TankFactory.getOrCreate(id, type, clan, rotation)
+        tank = TankFactory.getOrCreate(id, type, clan, rotation, bot)
 
         if id == Global.CurrentPlayerId: return
 
@@ -45,20 +48,12 @@ class Events():
         tank.position = position
 
     def fire(self, object):
-        instance = None
-        animation_instance = None
-
         last_update_time = object.get(NetworkDataCodes.LAST_UPDATE_TIME)
         parent_id = object.get(NetworkDataCodes.TANK_ID)
         id = object.get(NetworkDataCodes.BULLET_ID)
 
-        if object.get(NetworkDataCodes.TYPE) == NetworkDataCodes.STANDART_BULLET:
-            instance = StandartBullet
-            animation_instance = StandartBulletFireAnimation
-
-        if object.get(NetworkDataCodes.TYPE) == NetworkDataCodes.HEAVY_BULLET:
-            instance = HeavyBullet
-            animation_instance = HeavyBulletFireAnimation
+        instance = BulletFactory.get_instance(object.get(NetworkDataCodes.TYPE))
+        animation_instance = AnimationFactory.get_instance(object.get(NetworkDataCodes.TYPE))
 
         BulletFactory.create(
             instance=instance,
@@ -73,20 +68,12 @@ class Events():
             add_moving_handler=True
         )
 
-        # tank = Global.getGameTank(parent_id)
-        #
-        # if object.get(NetworkDataCodes.TYPE) == NetworkDataCodes.STANDART_BULLET:
-        #     tank.Gun.weapon2.fire(bullet)
-        #
-        # if object.get(NetworkDataCodes.TYPE) == NetworkDataCodes.HEAVY_BULLET:
-        #     tank.Gun.weapon1.fire(bullet)
-
     def damage(self, object):
         id = object.get(NetworkDataCodes.TANK_ID)
         dmg = object.get(NetworkDataCodes.DAMAGE)
         health = object.get(NetworkDataCodes.HEALTH)
 
-        Global.damageSomeObject(id=id, dmg=dmg, health=health)
+        Global.damageSomeTank(id=id, dmg=dmg, health=health)
         # tank = Global.getGameTank(id)
         # tank.setHealth(health)
         # Global.Layers.damage(dmg, tank.position)

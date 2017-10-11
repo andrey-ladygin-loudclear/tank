@@ -3,32 +3,29 @@ from threading import Timer
 import math
 from cocos import sprite
 
+from Landing.Building import Building
 from components import Global, NetworkCodes
+from components.NetworkCodes import NetworkActions, NetworkDataCodes
+from helpers.DamageHelper import DamageHelper
+from helpers.HealthHelper import HealthSprite
 from objects.weapons.MiniGunWeapon import MiniGunWeapon
 import cocos.collision_model as cm
 
 
-class MiniGunTower(sprite.Sprite):
-    id = 0
-    health = 1000
-    type = 5
-    clan = 2
+class MiniGunTower(Building):
+    health = 1000.0
+    maxHealth = 1000.0
+
     src = 'assets/towers/heavy-murder-final-turret-v2.png'
+
     weapon = None
     canFire = True
     bulletFreezTime = 0.1
 
     def __init__(self, id=0, position=(0,0), rotation=0, clan=1):
-        super(MiniGunTower, self).__init__(self.src)
-        if not id: id = Global.getNextId()
-
-        self.id = id
-        self.position = position
-        self.rotation = rotation
-        self.clan = clan
+        super(MiniGunTower, self).__init__(id=id, position=position, rotation=rotation, clan=clan)
         self.weapon = MiniGunWeapon()
         self.scale = 0.3
-
         self.cshape = cm.AARectShape(
             self.position,
             self.width // 2,
@@ -60,22 +57,3 @@ class MiniGunTower(sprite.Sprite):
 
     def acceptFire(self):
         self.canFire = True
-
-    def damage(self):
-        raise('http://www.bogotobogo.com/python/Multithread/python_multithreading_Event_Objects_between_Threads.php, You should add damage method in MiniGunTower')
-
-    def destroy(self):
-        raise('You should add Destroy method in MiniGunTower')
-
-    def getObjectFromSelf(self):
-        x, y = self.position
-        r = self.rotation
-
-        return {
-            'action': NetworkCodes.NetworkActions.UPDATE,
-            NetworkCodes.NetworkDataCodes.OBJECT_ID: self.id,
-            NetworkCodes.NetworkDataCodes.POSITION: (int(x), int(y)),
-            NetworkCodes.NetworkDataCodes.ROTATION: int(r),
-            NetworkCodes.NetworkDataCodes.CLAN: self.clan,
-            NetworkCodes.NetworkDataCodes.HEALTH: self.health,
-        }

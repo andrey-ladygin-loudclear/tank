@@ -3,14 +3,17 @@ from random import random
 from cocos import sprite
 from pyglet.resource import ResourceNotFoundException
 
+from Landing.Center import Center
 from Landing.LandingObject import LandingObject
 
 from Landing.MiniGunTower import MiniGunTower
 from components import Global
 from components.Global import addObjectToGame
 from helpers.TankHelper import TankHelper
+from movingHandlers.BotTankMovingHandlers import BotTankMovingHandlers
 from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from movingHandlers.TowerMovingHandlers import TowerMovingHandlers
+from movingHandlers.UserTankMovingHandlers import UserTankMovingHandlers
 from objects.Tank import Tank
 from objects.Wall import Wall
 
@@ -39,9 +42,14 @@ def add_background():
     Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = MiniGunTower(position=(700, 700))
+    tower = MiniGunTower(position=(700, 700),clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
+
+    center = Center(position=(1920, 2140), clan=2)
+    addObjectToGame(center)
+    center = Center(position=(1920, 100), clan=1)
+    addObjectToGame(center)
 
 def set_walls():
     add_background()
@@ -73,7 +81,7 @@ def set_walls():
 
     add_clans_objects()
 
-def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
+def addBot(type, clan, position=(100, 100), rotation=0, add_moving_handler=False, id=None):
     tank = Tank()
     tank.id = self.getNextId()
     tank.bot = True
@@ -94,7 +102,7 @@ def addBot(self, position=(0,0), rotation=0, clan=0, type=1):
 
     return tank.id
 
-def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handler=False, id=None):
+def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handler=False, id=None, bot=False):
     tank = TankHelper.getTankByType(int(type))
 
     if id:
@@ -103,12 +111,18 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
         tank.id = Global.getNextId()
 
     tank.clan = clan
+    tank.bot = bot
     tank.position = position
     tank.rotation = rotation
+    tank.gun_rotation = rotation
     #self.sendAllTanksToClients()
 
     if add_moving_handler:
-        tank.do(DefaultTankMovingHandlers())
+        tank.do(UserTankMovingHandlers())
+
+    if bot:
+        tank.moving_handler = BotTankMovingHandlers(tank)
+        tank.moving_handler.start()
 
     Global.addTankToObjectsAndSprites(tank)
 

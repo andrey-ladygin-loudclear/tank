@@ -4,6 +4,7 @@ class NetworkDataCodes:
     FRACTION = 'f'
     GUN_ROTATION = 'g'
     CLAN = 'cl'
+    BOT = 'bot'
     POSITION = 'p'
     LAST_UPDATE_TIME = 'lt'
     ANGLE_OF_DEFLECTION = 'aod'

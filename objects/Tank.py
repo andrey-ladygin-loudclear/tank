@@ -1,17 +1,12 @@
-import random
-
-import cocos
 import cocos.collision_model as cm
-import math
 from cocos import sprite
-from cocos.layer import ColorLayer
 
 from components import NetworkCodes, Global
 from components.NetworkCodes import NetworkActions, NetworkDataCodes
+from helpers.DamageHelper import DamageHelper
 from helpers.HealthHelper import HealthSprite
 from objects.Gun import Gun
 from objects.animations.ExplosionTankAnimation import ExplosionTankAnimation
-from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
 
 
 class Tank(sprite.Sprite):
@@ -89,27 +84,16 @@ class Tank(sprite.Sprite):
         animation = ExplosionTankAnimation()
         animation.appendAnimationToLayer(self.position)
 
-        #removeTankFromGame(self)
+        Global.EventDispatcher.dispatch_event('tank_destroy', self)
+        Global.removeTankFromGame(self)
 
     def damage(self, bullet):
-        x, y = self.position
-        x2, y2 = bullet.position
-        deltax = math.pow(x - x2, 2)
-        deltay = math.pow(y - y2, 2)
-        delta = (deltax + deltay)
-        range = math.sqrt(delta)
-        range = range - (self.width + self.height) * self.scale / 2
-        #range = max(range / 4, 1)
-
-        #dmg = bullet.damage - math.pow((( -2 * bullet.damageRadius / math.pow(bullet.damageRadius, 2) ) * math.pi * range), 2)
-        dmg = bullet.damage * self.damageKoef(range)
-        #print('range: ' + str(range))
-        #print('damage (without rand): ' + str(dmg))
-        dmg += random.randrange(-bullet.damage / 10, bullet.damage / 10)
+        dx = (self.width + self.height) * self.scale / 2
+        dmg = DamageHelper.get_damage(self.position, bullet, dx)
 
         self.health -= dmg
 
-        Global.damageSomeObject(id=self.id, dmg=dmg, health=self.health)
+        Global.damageSomeTank(id=self.id, dmg=dmg, health=self.health)
 
         Global.Queue.append({
             "action": NetworkActions.DAMAGE,
@@ -118,15 +102,6 @@ class Tank(sprite.Sprite):
             NetworkDataCodes.HEALTH: self.health,
             NetworkDataCodes.DAMAGE: dmg
         })
-
-    def damageKoef(self, range):
-        maxRange = 20
-
-        try:
-            v = math.log(-1 * range + maxRange, 1.22) + 5
-        except ValueError:
-            v = 0
-        return v / maxRange
 
     def getObjectFromSelf(self):
         x, y = self.position

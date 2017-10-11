@@ -1,19 +1,15 @@
 import math
-import random
-from threading import Thread, Timer
+from threading import Thread
 
 import time
-from cocos import actions
-from pyglet.window import key
 
-from gameObjects.Tank import Tank
-from gameObjects.bullets.HeavyBullet import HeavyBullet
-from gameObjects.bullets.StandartBullet import StandartBullet
-from helper import Global
+from components import Global
+from objects.Tank import Tank
 
 
 class BotTankMovingHandlers(Thread):
 
+    speed = 0
     target = None # type: Tank
 
     def __init__(self, target):
@@ -23,7 +19,7 @@ class BotTankMovingHandlers(Thread):
     def run(self):
         while True:
             self.check_position()
-            time.sleep(0.01)
+            time.sleep(0.1)
 
     def check_position(self):
         if not self.findNearPlayerAndAttack():
@@ -62,7 +58,8 @@ class BotTankMovingHandlers(Thread):
         if getLength(currx, curry, x, y) > 10:
             angle = getAngle(currx, curry, x, y)
             self.rotateToAngle(angle)
-            self.target.move(1)
+            # self.target.move(1)
+            self.addSpeed(1)
 
     def rotateGunToAngle(self, angle):
         gunAngle = abs(self.target.gun_rotation() % 360)
@@ -102,7 +99,7 @@ class BotTankMovingHandlers(Thread):
         shortest_distanse = 0
         shortest_player = None
 
-        for player in Global.GameObjects.getTanks():
+        for player in Global.getGameTanks():
             if player.clan == self.target.clan: continue
 
             distanse = self.getDistanceByPlayer(player)
@@ -117,7 +114,7 @@ class BotTankMovingHandlers(Thread):
         shortest_distanse = 0
         shortest_building = None
 
-        for building in Global.GameObjects.getWalls():
+        for building in Global.getGameObjects():
             if building.type != 5: continue
             if building.clan == self.target.clan: continue
 
@@ -138,9 +135,27 @@ class BotTankMovingHandlers(Thread):
 
     def setDefaultMoving(self):
         clan = 2 - self.target.clan + 1
-        center = Global.GameObjects.getCenter(clan)
-        x, y = center.position
-        self.goto(x, y)
+        #center = Global.GameObjects.getCenter(clan)
+        #x, y = center.position
+
+        if self.target.clan == 1:
+            self.goto(1920, 2140)
+        else:
+            self.goto(1920, 100)
+
+
+    def addSpeed(self, moving_directions):
+        if moving_directions:
+            speed = self.speed + self.target.speed_acceleration * moving_directions
+
+            if abs(speed) < self.target.max_speed:
+                self.speed = speed
+
+        else:
+            if self.speed > 0:
+                self.speed -= self.target.speed_acceleration
+            elif self.speed < 0:
+                self.speed += self.target.speed_acceleration
 
 def getLength(x1, y1, x2, y2):
     deltax = math.pow(x1 - x2, 2)

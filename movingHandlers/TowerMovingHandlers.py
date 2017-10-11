@@ -16,7 +16,6 @@ class TowerMovingHandlers(actions.Move):
     def __init__(self):
         super(TowerMovingHandlers, self).__init__()
 
-
     def step(self, dt):
         self.check_position()
 

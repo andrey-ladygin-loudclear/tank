@@ -4,6 +4,7 @@ import pyglet
 from cocos import sprite
 
 from components.Global import addanimationToGame
+from objects.animations.AnimationTypes import OnceAnimation
 
 
 class HeavyBulletFireAnimation:
@@ -13,7 +14,8 @@ class HeavyBulletFireAnimation:
         explosion_seq = pyglet.image.ImageGrid(explosion, 1, 24)
         explosion_tex_seq = pyglet.image.TextureGrid(explosion_seq)
         self.animation = pyglet.image.Animation.from_image_sequence(explosion_tex_seq, .02, loop=False)
-        self.anim = sprite.Sprite(self.animation)
+        # self.anim = sprite.Sprite(self.animation)
+        self.anim = OnceAnimation(self.animation)
         self.anim.scale = 0.2
 
     def getAnimation(self):
@@ -28,4 +30,4 @@ class HeavyBulletFireAnimation:
         anim = self.getSprite(position, rotation)
         duration = self.animation.get_duration()
 
-        addanimationToGame(anim, duration)
+        addanimationToGame(anim)

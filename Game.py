@@ -3,12 +3,10 @@ from time import sleep
 
 from cocos import director
 from cocos import scene
-
 from components import Global
 from components.Global import init_global_variables, setCurrentPlayerStats
 from components.Layers import Layers
 from components.MainSceneLayer import MainSceneLayer
-from components.Map import Map
 from components.Objects import addGamePlayer, load_map
 from events import Game
 from events.Network import Network
@@ -31,6 +29,8 @@ def main():
     #
     # createInterface(tanktype, clan, ip)
 
+        # pyglet.sprite.Sprite.__init__(self, img, x = 50, y = 30)
+
 def createInterface(tanktype, clan, ip):
 
     director.director.init(width=3000, height=960, do_not_scale=True, resizable=True)
@@ -45,9 +45,17 @@ def createInterface(tanktype, clan, ip):
     main_scene_layer = MainSceneLayer()
     main_scene = scene.Scene(main_scene_layer)
     main_scene.schedule(main_scene_layer.buttonsHandler)
+    main_scene_layer.register_event_type('on_clicked')
 
     game_layers = Layers(main_scene_layer)
     init_global_variables(game_layers)
+
+    # @main_scene_layer.event
+    # def on_clicked(clicks):
+    #     print('ovverided', clicks)
+    #     pass
+
+    main_scene_layer.dispatch_event('on_clicked', '12314124')
 
     load_map()
 
@@ -79,28 +87,28 @@ def createInterface(tanktype, clan, ip):
     director.director.window.push_handlers(Global.CurrentKeyboard)
     director.director.run(main_scene)
 
+
+
+
 def connectionsListenersPump():
     Global.connections_listener = Network(localaddr=('localhost', 1332))
 
     while True:
-        # connections_listener.Pump()
-        sleep(0.0001)
+        #addGamePlayer(type=1, clan=1, position=(1520, 140), bot=True)
 
-#
-#     # Play the scene in the window.1
-#
-# def initGlobalParams():
-#     Global.CollisionManager = cm.CollisionManagerBruteForce()
-#     Global.GameLayers = Layers()
-#     Global.GameObjects = Objects()
-#
-#     # Attach a KeyStateHandler to the keyboard object.
-#     Global.CurrentKeyboard = key.KeyStateHandler()
-#     director.director.window.push_handlers(Global.CurrentKeyboard)
-#     #scrollerHandler = layer.ScrollingManager()
-#     #Global.TankNetworkListenerConnection = NetworkListener('localhost', 1332)
-#
-#     Global.GameLayers.init()
+        # Global.AnimationsQueue.append({
+        #     'anim': HeavyBulletFireAnimation,
+        #     'position': (100,200),
+        #     'rotation': 90
+        # })
+
+        sleep(.30)
+    #while True:
+        # connections_listener.Pump()
+        #sleep(0.0001)
+        #sleep(0.8)
+        #Global.EventDispatcher.dispatch_event('create_animation', (200, 200))
+
 
 
 if __name__ == '__main__':

@@ -64,11 +64,17 @@ class Layers:
     def addAnimation(self, anim):
         self.globalPanel.add(anim)
 
-    def addObject(self, someobject, z=0):
-        self.objects.add(someobject, z=z)
+    def addObject(self, obj, z=0):
+        self.objects.add(obj, z=z)
 
-    def removeObject(self, someobject):
-        self.objects.remove(someobject)
+        if obj.healthHelper:
+            self.objects.add(obj.healthHelper, z=2)
+
+    def removeObject(self, obj):
+        self.objects.remove(obj)
+
+        if obj.healthHelper:
+            self.objects.remove(obj.healthHelper)
 
     def addWall(self, wall, z=0):
         self.walls.add(wall, z=z)

@@ -16,7 +16,7 @@ class Gun(sprite.Sprite):
     canHeavyFire = True
 
     bulletFreezTime = 0.15
-    heavyBulletFreezTime = 1
+    heavyBulletFreezTime = 2
 
     tank = None
 

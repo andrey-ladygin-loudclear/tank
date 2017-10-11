@@ -1,8 +1,6 @@
-#import Global
-from objects.animations.heavyBulletFireAnimation import heavyBulletFireAnimation
-from objects.animations.standartBulletFireAnimation import standartBulletFireAnimation
-from objects.bullets.heavyBullet import HeavyBullet
-from objects.bullets.standartBullet import StandartBullet
+from components.NetworkCodes import NetworkDataCodes
+from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
+from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
 
 
 class AnimationFactory:
@@ -20,6 +18,13 @@ class AnimationFactory:
 
 
 
+    @staticmethod
+    def get_instance(type):
+        if type == NetworkDataCodes.STANDART_BULLET:
+            return StandartBulletFireAnimation
+
+        if type == NetworkDataCodes.HEAVY_BULLET:
+            return HeavyBulletFireAnimation
 
 
 

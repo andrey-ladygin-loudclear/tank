@@ -2,6 +2,7 @@ from threading import Timer
 
 import PodSixNet
 import cocos
+import pyglet
 from cocos.actions import MoveBy, FadeOut
 from pyglet.window import key
 
@@ -13,7 +14,7 @@ from events import Game
 from events.NetworkListener import NetworkListener
 
 
-class MainSceneLayer(cocos.layer.ScrollableLayer):
+class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
     is_event_handler = True
     help = None
     label = None
@@ -27,10 +28,17 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
             Game.checkCollisions()
 
             if Global.connections_listener: Global.connections_listener.Pump()
+            self.playAnimationsQueue()
         else:
             PodSixNet.Connection.connection.Pump()
             Global.TankNetworkListenerConnection.Pump()
             self.sendDataToServer()
+
+    def click(self, clicks):
+        self.dispatch_event('on_clicked', clicks)
+
+    def on_clicked(self, clicks):
+        print('on_clicked', clicks)
 
     def sendDataToServer(self):
         player = getGamePlayer()
@@ -109,3 +117,10 @@ class MainSceneLayer(cocos.layer.ScrollableLayer):
 
         t = Timer(2000, lambda: Global.Layers.globalPanel.remove(label))
         t.start()
+
+    def playAnimationsQueue(self):
+        for animation in Global.AnimationsQueue:
+            a = animation['anim']()
+            a.appendAnimationToLayer(animation['position'], animation['rotation'])
+
+        Global.AnimationsQueue = []

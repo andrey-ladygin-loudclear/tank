@@ -2,7 +2,10 @@ from time import time
 
 from components import Global
 from components.Global import addBulletToGame
+from components.NetworkCodes import NetworkDataCodes
 from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
+from objects.bullets.HeavyBullet import HeavyBullet
+from objects.bullets.StandartBullet import StandartBullet
 
 
 class BulletFactory:
@@ -36,6 +39,14 @@ class BulletFactory:
             animation.appendAnimationToLayer(animation_position, animation_rotation)
 
         return bullet
+
+    @staticmethod
+    def get_instance(type):
+        if type == NetworkDataCodes.STANDART_BULLET:
+            return StandartBullet
+
+        if type == NetworkDataCodes.HEAVY_BULLET:
+            return HeavyBullet
 
     # @staticmethod
     # def create(bullet, id, tank, position, rotation, last_update_time):

@@ -3,9 +3,12 @@ from threading import Timer
 
 import pyglet
 from cocos import sprite
+from pyglet.image import load_animation
+from pyglet.image.atlas import TextureBin
 from pyglet.window import key
 import cocos.collision_model as cm
 
+from components.GameEventDispatcher import GameEventDispatcher
 from components.NetworkCodes import NetworkActions
 
 CurrentKeyboard = key.KeyStateHandler()
@@ -69,6 +72,10 @@ def getGameTank(id):
 def getGameTanks():
     return tanks
 
+def removeTankFromGame(tank):
+    Layers.removeTank(tank)
+    tanks.remove(tank)
+
 def getGameBullet(id):
     for bullet in getGameBullets():
         if bullet.id == id:
@@ -89,10 +96,11 @@ def getGameWall(id):
 def getGameWalls():
     return walls
 
-def addanimationToGame(anim, duration):
+def addanimationToGame(anim, duration=None):
     Layers.addAnimation(anim)
-    t = Timer(duration, lambda: Layers.removeAnimation(anim))
-    t.start()
+    if duration:
+        t = Timer(duration, lambda: Layers.removeAnimation(anim))
+        t.start()
 
 def addTankToObjectsAndSprites(tank):
     CollisionManager.add(tank)
@@ -115,22 +123,66 @@ def setCurrentPlayerStats(id):
     CurrentPlayerId = id
     Layers.init_panel_with_stats()
 
-def damageSomeObject(id, health, dmg):
+def damageSomeTank(id, health, dmg):
     tank = getGameTank(id)
     tank.setHealth(health)
     Layers.damage(dmg, tank.position)
 
     if id == CurrentPlayerId:
         Layers.setHealth(health)
-#
-# anim = None
-# animation = None
-#
-# def load_animations():
-#     global anim, animation
-#     explosion = pyglet.image.load('assets/weapons/fire-small-gun.png')
-#     explosion_seq = pyglet.image.ImageGrid(explosion, 1, 3)
-#     explosion_tex_seq = pyglet.image.TextureGrid(explosion_seq)
-#     animation = pyglet.image.Animation.from_image_sequence(explosion_tex_seq, .02, loop=False)
-#     anim = sprite.Sprite(animation)
-#     anim.scale = 0.2
+
+def damageSomeObject(id, health, dmg):
+    obj = getGameObject(id)
+    obj.setHealth(health)
+    Layers.damage(dmg, obj.position)
+
+
+
+class EventDispatcherInstance(pyglet.event.EventDispatcher):
+    #src = 'assets/weapons/bullet-explode.gif'
+    src = 'assets/booms/4517769.gif'
+    anim = None
+    animation = None
+    duration = None
+
+    def load_anim(self):
+        print('load_anim')
+        self.animation = load_animation(self.src)
+        #self.bin = TextureBin()
+        self.animation.frames[-1].duration = None # stop loop
+
+        #self.anim = sprite.Sprite(self.animation)
+        # self.anim = OnceAnimation(self.animation)
+        # self.anim.image_anchor = (self.animation.get_max_width() / 2, self.animation.get_max_height() / 4)
+        # self.anim.scale = 0.2
+        self.duration = self.animation.get_duration() + 1
+
+        #self.anim = OnceAnimation(self.animation.get_transform())
+
+        # @self.animation.event
+        # def on_animation_end(clicks):
+        #     print('ovverided', clicks)
+        #     pass
+
+    def create_animation(self, position):
+        return
+        if not self.animation: self.load_anim()
+
+        #an = copy(self.anim)
+        #an = (self.anim)
+        an = OnceAnimation(self.animation)
+        #an = self.anim.get_local_transform()
+        #an = copy.deepcopy(self.anim)
+        an.image_anchor = (self.animation.get_max_width() / 2, self.animation.get_max_height() / 4)
+        an.scale = 0.2
+
+        an.position = position
+        an.rotation = 0 - 180
+        addanimationToGame(an, self.duration)
+
+
+EventDispatcher = GameEventDispatcher()
+EventDispatcher.register_event_type('tank_destroy')
+
+
+AnimationsQueue = []

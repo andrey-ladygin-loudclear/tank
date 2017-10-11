@@ -1,19 +1,18 @@
-import math
-
+from Landing.Building import Building
 import cocos.collision_model as cm
-from cocos.sprite import Sprite
-
-from Landing.LandingObject import LandingObject
-from helper import Global
 
 
-class Center(LandingObject):
-    id = 0
+class Center(Building):
     health = 1000
-    position = (0, 0)
-    width = 135
-    height = 141
-    scale = .7
+    maxHealth = 1000
+    src = 'assets/buildings/center.png'
 
-    type = 5
-    src = ''
+    def __init__(self, id=0, position=(0,0), rotation=0, clan=1):
+        super(Center, self).__init__(id=id, position=position, rotation=rotation, clan=clan)
+
+        self.scale = 0.7
+        self.cshape = cm.AARectShape(
+            self.position,
+            self.width // 2,
+            self.height // 2
+        )
