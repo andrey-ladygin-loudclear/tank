@@ -11,6 +11,7 @@ from components.Objects import addGamePlayer, load_map
 from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
+from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
 
 
 def main():
@@ -101,6 +102,8 @@ def connectionsListenersPump():
         #     'position': (100,200),
         #     'rotation': 90
         # })
+        # a = HeavyBulletFireAnimation()
+        # a.appendAnimationToLayer((100,200), 90)
 
         sleep(.30)
     #while True:
