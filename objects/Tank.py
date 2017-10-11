@@ -103,6 +103,9 @@ class Tank(sprite.Sprite):
             NetworkDataCodes.DAMAGE: dmg
         })
 
+    def getGunRotation(self):
+        return self.gun_rotation + self.rotation
+
     def getObjectFromSelf(self):
         x, y = self.position
         r = self.rotation

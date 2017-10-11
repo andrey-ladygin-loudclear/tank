@@ -3,58 +3,23 @@ from threading import Thread
 
 import time
 
-import operator
-
 from components import Global
-from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from objects.Tank import Tank
 
 
-class BotTankMovingHandlers(DefaultTankMovingHandlers):
+class BotTankMovingHandlers(Thread):
 
     speed = 0
     target = None # type: Tank
 
-    def step(self, dt):
-        super(BotTankMovingHandlers, self).step(dt) # Run step function on the parent class.
+    def __init__(self, target):
+        Thread.__init__(self)
+        self.target = target
 
-        if not self.findNearPlayerAndAttack():
-            if not self.findNearBuildingAndAttack():
-                self.setDefaultMoving()
-
-        # turns_direction = Global.CurrentKeyboard[self.RIGHT] - Global.CurrentKeyboard[self.LEFT]
-        # moving_directions = Global.CurrentKeyboard[self.UP] - Global.CurrentKeyboard[self.DOWN]
-        # gun_turns_direction = Global.CurrentKeyboard[self.GUN_RIGHT] - Global.CurrentKeyboard[self.GUN_LEFT]
-        #
-        # if Global.CurrentKeyboard[self.FIRE_LIGHT_GUN]:
-        #     self.target.fire()
-        #
-        # if Global.CurrentKeyboard[self.FIRE_HEAVY_GUN]:
-        #     self.target.heavy_fire()
-        #
-        # self.addSpeed(moving_directions)
-        #
-        # # Set the object's velocity.
-        # self.setTankRotation(turns_direction, moving_directions)
-        # new_velocity = self.getVelocity()
-        #
-        # new_position = tuple(map(operator.add, self.target.position, new_velocity))
-        #
-        # if self.checkCollisionsWithObjects():
-        #     self.target.velocity = (0, 0)
-        #     self.target.position = self.target.old_position
-        # else:
-        #     self.target.old_position = self.target.position
-        #     new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
-        #     self.setNewVelocity(new_velocity)
-        #
-        #
-        # # SHOULD REDUCE SPEED IF NEXT POSITION IS WALL
-        # #self.setNewVelocity(new_velocity)
-        # self.setGunPosition()
-        #
-        # # Set the object's rotation
-        # self.setGunRotation(gun_turns_direction)
+    def run(self):
+        while True:
+            self.check_position()
+            time.sleep(0.1)
 
     def check_position(self):
         if not self.findNearPlayerAndAttack():
@@ -76,8 +41,6 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
 
     def findNearBuildingAndAttack(self):
         building, distanse = self.getBuildingByShortestDistanse()
-        print('building', building)
-        print('distanse', distanse)
 
         if building and distanse < 600:
             angleToPlayer = getAngleWithObject(self.target, building)
@@ -95,19 +58,8 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         if getLength(currx, curry, x, y) > 10:
             angle = getAngle(currx, curry, x, y)
             self.rotateToAngle(angle)
+            # self.target.move(1)
             self.addSpeed(1)
-
-            new_velocity = self.getVelocity()
-            new_position = tuple(map(operator.add, self.target.position, new_velocity))
-
-            if self.checkCollisionsWithObjects():
-                self.target.velocity = (0, 0)
-                self.target.position = self.target.old_position
-            else:
-                self.target.old_position = self.target.position
-                new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
-                self.setNewVelocity(new_velocity)
-
 
     def rotateGunToAngle(self, angle):
         gunAngle = abs(self.target.gun_rotation() % 360)
@@ -163,7 +115,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         shortest_building = None
 
         for building in Global.getGameObjects():
-            # if building.type != 5: continue
+            if building.type != 5: continue
             if building.clan == self.target.clan: continue
 
             x1, y1 = self.target.position
@@ -190,21 +142,6 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
             self.goto(1920, 2140)
         else:
             self.goto(1920, 100)
-
-        # #self.setGunPosition()
-        # new_velocity = self.getVelocity()
-        #
-        # new_position = tuple(map(operator.add, self.target.position, new_velocity))
-        # if self.checkCollisionsWithObjects():
-        #     self.target.velocity = (0, 0)
-        #     self.target.position = self.target.old_position
-        # else:
-        #     self.target.old_position = self.target.position
-        #     new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
-        #     self.setNewVelocity(new_velocity)
-
-        # Set the object's rotation
-        #self.setGunRotation(gun_turns_direction)
 
 
     def addSpeed(self, moving_directions):

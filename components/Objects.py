@@ -121,8 +121,9 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
         tank.do(UserTankMovingHandlers())
 
     if bot:
-        tank.moving_handler = BotTankMovingHandlers(tank)
-        tank.moving_handler.start()
+        tank.do(BotTankMovingHandlers())
+        # tank.moving_handler = BotTankMovingHandlers(tank)
+        # tank.moving_handler.start()
 
     Global.addTankToObjectsAndSprites(tank)
 
