@@ -52,6 +52,7 @@ class Layers:
             t.start()
 
     def addTank(self, tank):
+        print(tank.position)
         self.tanks.add(tank, z=2)
         self.tanks.add(tank.Gun, z=2)
         self.tanks.add(tank.healthHelper, z=2)

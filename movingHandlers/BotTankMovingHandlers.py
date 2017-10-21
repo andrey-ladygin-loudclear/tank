@@ -21,6 +21,8 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         if not self.findNearPlayerAndAttack():
             if not self.findNearBuildingAndAttack():
                 self.setDefaultMoving()
+            else:
+                self.addSpeed()
 
         # turns_direction = Global.CurrentKeyboard[self.RIGHT] - Global.CurrentKeyboard[self.LEFT]
         # moving_directions = Global.CurrentKeyboard[self.UP] - Global.CurrentKeyboard[self.DOWN]
@@ -76,8 +78,6 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
 
     def findNearBuildingAndAttack(self):
         building, distanse = self.getBuildingByShortestDistanse()
-        print('building', building)
-        print('distanse', distanse)
 
         if building and distanse < 600:
             angleToPlayer = getAngleWithObject(self.target, building)
@@ -87,6 +87,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
             if diffAngle < 5:
                 self.target.heavy_fire()
             return True
+
         return False
 
     def goto(self, x, y):
@@ -187,9 +188,9 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         #x, y = center.position
 
         if self.target.clan == 1:
-            self.goto(1920, 2140)
+            self.goto(1120, 3740)
         else:
-            self.goto(1920, 100)
+            self.goto(1120, 100)
 
         # #self.setGunPosition()
         # new_velocity = self.getVelocity()
@@ -207,7 +208,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         #self.setGunRotation(gun_turns_direction)
 
 
-    def addSpeed(self, moving_directions):
+    def addSpeed(self, moving_directions = None):
         if moving_directions:
             speed = self.speed + self.target.speed_acceleration * moving_directions
 

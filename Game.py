@@ -95,7 +95,14 @@ def connectionsListenersPump():
     Global.connections_listener = Network(localaddr=('localhost', 1332))
 
     while True:
-        addGamePlayer(type=1, clan=2, position=(1520, 140), bot=True)
+        addGamePlayer(type=1, clan=1, position=(1070, 150), bot=True)
+       # addGamePlayer(type=1, clan=1, position=(1120, 150), bot=True)
+        #addGamePlayer(type=1, clan=1, position=(1170, 150), bot=True)
+        #
+        # addGamePlayer(type=2, clan=2, position=(1070, 3690), bot=True)
+        # addGamePlayer(type=2, clan=2, position=(1120, 3690), bot=True)
+        # addGamePlayer(type=2, clan=2, position=(1170, 3690), bot=True)
+
 
         # Global.AnimationsQueue.append({
         #     'anim': HeavyBulletFireAnimation,

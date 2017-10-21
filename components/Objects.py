@@ -42,13 +42,27 @@ def add_background():
     Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = MiniGunTower(position=(700, 700),clan=2)
+    tower = MiniGunTower(position=(1070, 2320), clan=2)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
+    tower = MiniGunTower(position=(1170, 2320), clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
 
-    center = Center(position=(1920, 2140), clan=2)
+
+    tower = MiniGunTower(position=(1070, 1520), clan=1)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
+
+    tower = MiniGunTower(position=(1170, 1520), clan=1)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
+
+
+
+    center = Center(position=(1120, 3740), clan=2)
     addObjectToGame(center)
-    center = Center(position=(1920, 100), clan=1)
+    center = Center(position=(1120, 100), clan=1)
     addObjectToGame(center)
 
 def set_walls():
