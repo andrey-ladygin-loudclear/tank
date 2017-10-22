@@ -3,6 +3,8 @@ from time import sleep
 
 from cocos import director
 from cocos import scene
+
+import components
 from components import Global
 from components.Global import init_global_variables, setCurrentPlayerStats
 from components.Layers import Layers
@@ -12,7 +14,7 @@ from events import Game
 from events.Network import Network
 from events.NetworkListener import NetworkListener
 from objects.animations.HeavyBulletFireAnimation import HeavyBulletFireAnimation
-
+from multiprocessing import Process
 
 def main():
     res = int(raw_input('1 - create new game, 2 - connect\n'))
@@ -72,9 +74,13 @@ def createInterface(tanktype, clan, ip):
         # thread.setDaemon(True)
         # thread.start()
 
-        thread = Thread(target = connectionsListenersPump)
-        thread.setDaemon(True)
-        thread.start()
+        #proc = Process(target=connectionsListenersPump, args=(addGamePlayer,))
+        #proc.start()
+        #proc.join()
+
+        # thread = Thread(target = connectionsListenersPump)
+        # thread.setDaemon(True)
+        # thread.start()
 
         thread = Thread(target = Game.sendDataToPlayers)
         thread.setDaemon(True)
@@ -91,17 +97,18 @@ def createInterface(tanktype, clan, ip):
 
 
 
-def connectionsListenersPump():
+def connectionsListenersPump(fn):
     Global.connections_listener = Network(localaddr=('localhost', 1332))
 
     while True:
-        addGamePlayer(type=1, clan=1, position=(1070, 150), bot=True)
-       # addGamePlayer(type=1, clan=1, position=(1120, 150), bot=True)
-        #addGamePlayer(type=1, clan=1, position=(1170, 150), bot=True)
-        #
-        # addGamePlayer(type=2, clan=2, position=(1070, 3690), bot=True)
-        # addGamePlayer(type=2, clan=2, position=(1120, 3690), bot=True)
-        # addGamePlayer(type=2, clan=2, position=(1170, 3690), bot=True)
+        fn(type=1, clan=1, position=(1070, 200), bot=True, rotation=180)
+        #addGamePlayer(type=1, clan=1, position=(1070, 200), bot=True, rotation=180)
+        # addGamePlayer(type=1, clan=1, position=(1120, 200), bot=True, rotation=180)
+        # addGamePlayer(type=1, clan=1, position=(1170, 200), bot=True, rotation=180)
+
+        # addGamePlayer(type=2, clan=2, position=(1070, 3640), bot=True)
+        # addGamePlayer(type=2, clan=2, position=(1120, 3640), bot=True)
+        # addGamePlayer(type=2, clan=2, position=(1170, 3640), bot=True)
 
 
         # Global.AnimationsQueue.append({

@@ -21,11 +21,13 @@ class Layers:
         self.objects = BatchNode()
         self.backgrounds = BatchNode()
         self.tanks = BatchNode()
+        # self.decorations = BatchNode()
 
         #main_scene = get_main_scene_layer()
         self.main_scene = main_scene
         self.main_scene.add(self.backgrounds, z=0)
         self.main_scene.add(self.bullets, z=1)
+        # self.main_scene.add(self.decorations)
         self.main_scene.add(self.walls)
         self.main_scene.add(self.objects)
         self.main_scene.add(self.tanks)
@@ -51,11 +53,14 @@ class Layers:
             t = Timer(time, lambda: self.globalPanel.remove(item))
             t.start()
 
+    tankz = 3
+
     def addTank(self, tank):
+        self.tankz += 1
         print(tank.position)
         self.tanks.add(tank, z=2)
-        self.tanks.add(tank.Gun, z=2)
-        self.tanks.add(tank.healthHelper, z=2)
+        self.tanks.add(tank.Gun, z=3)
+        self.tanks.add(tank.healthHelper, z=4)
 
     def removeTank(self, tank):
         self.tanks.remove(tank)
@@ -84,10 +89,11 @@ class Layers:
         self.walls.remove(wall)
 
     def removeAnimation(self, anim):
-        try:
-            if anim in self.globalPanel: self.globalPanel.remove(anim)
-        except Exception:
-            pass
+        self.globalPanel.remove(anim)
+        # try:
+        #     if anim in self.globalPanel: self.globalPanel.remove(anim)
+        # except Exception:
+        #     pass
 
     def addBullet(self, bullet):
         self.bullets.add(bullet)

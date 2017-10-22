@@ -8,7 +8,7 @@ from objects.bullets.StandartBullet import StandartBullet
 
 class MiniGunWeapon:
     def getAngleDeflection(self):
-        return random.randrange(-500, 500) / 100
+        return random.randrange(-300, 300) / 100
 
     def fire(self, id=None, position=None, animation_position=None, rotation=None, animation_rotation=None, last_update_time=None, parent_id=None):
         bullet = StandartBullet()
@@ -21,7 +21,7 @@ class MiniGunWeapon:
         bullet.parent_id = parent_id
         bullet.position = position
         bullet.start_position = position
-        bullet.rotation = rotation
+        bullet.rotation = rotation + self.getAngleDeflection()
         bullet.last_update_time = last_update_time
 
         Global.addBulletToGame(bullet)

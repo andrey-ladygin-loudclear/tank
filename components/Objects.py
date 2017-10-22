@@ -42,19 +42,19 @@ def add_background():
     Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = MiniGunTower(position=(1070, 2320), clan=2)
+    tower = MiniGunTower(position=(1000, 2320), clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
-    tower = MiniGunTower(position=(1170, 2320), clan=2)
-    tower.do(TowerMovingHandlers())
-    addObjectToGame(tower)
-
-
-    tower = MiniGunTower(position=(1070, 1520), clan=1)
+    tower = MiniGunTower(position=(1240, 2320), clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
 
-    tower = MiniGunTower(position=(1170, 1520), clan=1)
+
+    tower = MiniGunTower(position=(1000, 1520), clan=1, rotation=180)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
+
+    tower = MiniGunTower(position=(1240, 1520), clan=1, rotation=180)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
 
@@ -127,8 +127,8 @@ def addGamePlayer(type, clan, position=(100, 100), rotation=0, add_moving_handle
     tank.clan = clan
     tank.bot = bot
     tank.position = position
+    # tank.gun_rotation = rotation
     tank.rotation = rotation
-    tank.gun_rotation = rotation
     #self.sendAllTanksToClients()
 
     if add_moving_handler:

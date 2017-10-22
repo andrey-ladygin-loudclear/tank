@@ -1,6 +1,8 @@
 from threading import Timer
 
 import math
+
+import functools
 from cocos import sprite
 
 from Landing.Building import Building
@@ -57,3 +59,14 @@ class MiniGunTower(Building):
 
     def acceptFire(self):
         self.canFire = True
+
+
+# def freeze_fire(time):
+#     def actual_decorator(func):
+#         @functools.wraps(func)
+#         def wrapper(*args, **kwargs):
+#             if self.canFire:
+#                 print("Calling Function: " + func.__name__)
+#             return func(*args, **kwargs)
+#         return wrapper
+#     return actual_decorator

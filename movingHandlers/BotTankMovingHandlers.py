@@ -12,17 +12,20 @@ from objects.Tank import Tank
 
 class BotTankMovingHandlers(DefaultTankMovingHandlers):
 
-    speed = 0
+    speed = 120
     target = None # type: Tank
 
     def step(self, dt):
         super(BotTankMovingHandlers, self).step(dt) # Run step function on the parent class.
 
-        if not self.findNearPlayerAndAttack():
-            if not self.findNearBuildingAndAttack():
-                self.setDefaultMoving()
-            else:
-                self.addSpeed()
+
+        if self.findNearPlayerAndAttack() or self.findNearBuildingAndAttack():
+            self.reduceSpeed()
+        else:
+            self.setDefaultMoving()
+
+
+        self.checkPosition()
 
         # turns_direction = Global.CurrentKeyboard[self.RIGHT] - Global.CurrentKeyboard[self.LEFT]
         # moving_directions = Global.CurrentKeyboard[self.UP] - Global.CurrentKeyboard[self.DOWN]
@@ -71,7 +74,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
             self.rotateGunToObject(player)
             diffAngle = getDiffAngleInSector(self.target.getGunRotation(), angleToPlayer)
 
-            if diffAngle < 5:
+            if diffAngle < 3:
                 self.target.heavy_fire()
             return True
         return False
@@ -96,19 +99,20 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         if getLength(currx, curry, x, y) > 10:
             angle = getAngle(currx, curry, x, y)
             self.rotateToAngle(angle)
-            self.addSpeed(1)
+            #self.addSpeed(1)
 
-            new_velocity = self.getVelocity()
-            new_position = tuple(map(operator.add, self.target.position, new_velocity))
 
-            if self.checkCollisionsWithObjects():
-                self.target.velocity = (0, 0)
-                self.target.position = self.target.old_position
-            else:
-                self.target.old_position = self.target.position
-                new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
-                self.setNewVelocity(new_velocity)
+    def checkPosition(self):
+        new_velocity = self.getVelocity()
+        new_position = tuple(map(operator.add, self.target.position, new_velocity))
 
+        if self.checkCollisionsWithObjects():
+            self.target.velocity = (0, 0)
+            self.target.position = self.target.old_position
+        else:
+            self.target.old_position = self.target.position
+            new_velocity = self.getVelocityByNewPosition(self.target.position, new_position)
+            self.setNewVelocity(new_velocity)
 
     def rotateGunToAngle(self, angle):
         gunAngle = abs(self.target.gun_rotation() % 360)
@@ -216,10 +220,17 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
                 self.speed = speed
 
         else:
-            if self.speed > 0:
-                self.speed -= self.target.speed_acceleration
-            elif self.speed < 0:
-                self.speed += self.target.speed_acceleration
+            self.reduceSpeed()
+
+    def reduceSpeed(self):
+        if self.speed > 0:
+            self.speed -= self.target.speed_acceleration
+        elif self.speed < 0:
+            self.speed += self.target.speed_acceleration
+
+        if abs(self.speed) < self.target.speed_acceleration:
+            self.speed = 0
+
 
 def getLength(x1, y1, x2, y2):
     deltax = math.pow(x1 - x2, 2)

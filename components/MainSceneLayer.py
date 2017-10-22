@@ -10,6 +10,7 @@ from components import Global
 from components import NetworkCodes
 from components.Global import getGamePlayer
 from components.NetworkCodes import NetworkActions, NetworkDataCodes
+from components.Objects import addGamePlayer
 from events import Game
 from events.NetworkListener import NetworkListener
 
@@ -29,10 +30,16 @@ class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
 
             if Global.connections_listener: Global.connections_listener.Pump()
             self.playAnimationsQueue()
+            self.callPeriodicalEvent(dt)
         else:
             PodSixNet.Connection.connection.Pump()
             Global.TankNetworkListenerConnection.Pump()
             self.sendDataToServer()
+
+
+        self.removeLabelsWithDamage()
+        self.printDebugInfo()
+
 
     def click(self, clicks):
         self.dispatch_event('on_clicked', clicks)
@@ -103,6 +110,8 @@ class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
     def setHealth(self, health):
         self.label.element.text = str(int(round(health)))
 
+
+    damageLabels = []
     def damage(self, damage, position):
         label = cocos.text.Label(
             '-' + str(int(round(damage))),
@@ -111,12 +120,34 @@ class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
             color=(255, 0, 0, 255),
             anchor_x='center',  anchor_y='center'
         )
+        label.deleteWhenHided = True
         label.position = position
+        #Global.Layers.globalPanel.add(label)
         Global.Layers.globalPanel.add(label)
         label.do(MoveBy((0, 100), 2) | FadeOut(2))
+        self.damageLabels.append(label)
 
-        t = Timer(2000, lambda: Global.Layers.globalPanel.remove(label))
-        t.start()
+    def removeLabelsWithDamage(self):
+        for label in self.damageLabels:
+            if not int(label.opacity):
+                if label in Global.Layers.globalPanel: Global.Layers.globalPanel.remove(label)
+
+
+    def printDebugInfo(self):
+        bullets = Global.getGameBullets()
+        tanks = Global.getGameTanks()
+        walls = Global.getGameWalls()
+        CM = Global.CollisionManager
+        LayersTanks = Global.Layers.tanks
+        LayersWalls = Global.Layers.walls
+        LayersBullets = Global.Layers.bullets
+        LayersAnimations = Global.Layers.globalPanel
+
+        print('bullets', len(bullets),
+              'LayersBullets', len(LayersBullets.children),
+              'LayersAnimations', len(LayersAnimations.children),
+              'CollisionManager', len(CM.objs),
+              'tanks', len(tanks))
 
     def playAnimationsQueue(self):
         for animation in Global.AnimationsQueue:
@@ -124,3 +155,20 @@ class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
             a.appendAnimationToLayer(animation['position'], animation['rotation'])
 
         Global.AnimationsQueue = []
+
+
+    sumDt = 30.0
+    def callPeriodicalEvent(self, dt):
+        self.sumDt += dt
+
+        if self.sumDt > 30:
+            self.sumDt = 0.0
+            addGamePlayer(type=1, clan=1, position=(1070, 200), bot=True, rotation=180)
+            # addGamePlayer(type=1, clan=1, position=(1120, 200), bot=True, rotation=180)
+            addGamePlayer(type=1, clan=1, position=(1170, 200), bot=True, rotation=180)
+            #
+            # addGamePlayer(type=2, clan=2, position=(1070, 3640), bot=True)
+            # addGamePlayer(type=2, clan=2, position=(1120, 3640), bot=True)
+            # addGamePlayer(type=2, clan=2, position=(1170, 3640), bot=True)
+
+
