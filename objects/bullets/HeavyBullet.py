@@ -1,4 +1,4 @@
-
+from components import Global
 from objects.Bullet import Bullet
 from objects.animations.ExplosionHeavyBulletAnimation import explosionHeavyBulletAnimation
 
@@ -9,10 +9,10 @@ class HeavyBullet(Bullet):
     startPosition = (0, 0)
 
     scale = 1
-    damage = 10
+    damage = 25
     damageRadius = 20
     velocity = (0, 0)
-    fireLength = 1000
+    fireLength = 800
 
     speed = 600
 
@@ -20,7 +20,7 @@ class HeavyBullet(Bullet):
         super(HeavyBullet, self).__init__(self.spriteName)
 
     def removeAnimation(self):
-        Global.GameLayers.removeAnimation(self)
+        Global.Layers.removeAnimation(self)
 
     def destroy(self, position=None):
         if not position: position = self.position

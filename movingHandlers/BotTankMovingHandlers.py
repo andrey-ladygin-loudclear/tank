@@ -5,6 +5,7 @@ import time
 
 import operator
 
+from Landing.Center import Center
 from components import Global
 from movingHandlers.DefaultTankMovingHandlers import DefaultTankMovingHandlers
 from objects.Tank import Tank
@@ -74,7 +75,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
             self.rotateGunToObject(player)
             diffAngle = getDiffAngleInSector(self.target.getGunRotation(), angleToPlayer)
 
-            if diffAngle < 3:
+            if diffAngle < 4:
                 self.target.heavy_fire()
             return True
         return False
@@ -87,7 +88,7 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
             self.rotateGunToObject(building)
             diffAngle = getDiffAngleInSector(self.target.getGunRotation(), angleToPlayer)
 
-            if diffAngle < 5:
+            if diffAngle < 4:
                 self.target.heavy_fire()
             return True
 
@@ -191,10 +192,19 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
         #center = Global.GameObjects.getCenter(clan)
         #x, y = center.position
 
-        if self.target.clan == 1:
-            self.goto(1120, 3740)
-        else:
-            self.goto(1120, 100)
+        enemyCenter = self.getEnemyCenter(self.target.clan)
+
+        self.goto(*enemyCenter.position)
+
+    def getEnemyCenter(self, clan):
+        for obj in Global.getGameObjects():
+            if isinstance(obj, Center) and obj.clan != clan:
+                return obj
+
+        #if self.target.clan == 1:
+            #self.goto(1120, 3740)
+        #else:
+            #self.goto(1120, 100)
 
         # #self.setGunPosition()
         # new_velocity = self.getVelocity()
@@ -210,7 +220,6 @@ class BotTankMovingHandlers(DefaultTankMovingHandlers):
 
         # Set the object's rotation
         #self.setGunRotation(gun_turns_direction)
-
 
     def addSpeed(self, moving_directions = None):
         if moving_directions:

@@ -5,6 +5,7 @@ from components.Global import addBulletToGame
 from components.NetworkCodes import NetworkDataCodes
 from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
 from objects.bullets.HeavyBullet import HeavyBullet
+from objects.bullets.LightBullet import LightBullet
 from objects.bullets.StandartBullet import StandartBullet
 
 
@@ -47,6 +48,9 @@ class BulletFactory:
 
         if type == NetworkDataCodes.HEAVY_BULLET:
             return HeavyBullet
+
+        if type == NetworkDataCodes.LIGHT_BULLET:
+            return LightBullet
 
     # @staticmethod
     # def create(bullet, id, tank, position, rotation, last_update_time):

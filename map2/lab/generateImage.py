@@ -7,8 +7,8 @@ src1 = '../assets/177.jpg'
 src2 = '../assets/178.jpg'
 src3 = '../assets/179.jpg'
 
-x_blockCount = 70
-y_blockCount = 120
+x_blockCount = 140
+y_blockCount = 140
 
 mw = 32 * x_blockCount
 mh = 32 * y_blockCount

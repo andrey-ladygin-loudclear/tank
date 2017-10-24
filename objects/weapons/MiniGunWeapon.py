@@ -3,15 +3,16 @@ from time import time
 from components import Global
 from movingHandlers.BulletMovingHandlers import BulletMovingHandlers
 from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
+from objects.bullets.LightBullet import LightBullet
 from objects.bullets.StandartBullet import StandartBullet
 
 
 class MiniGunWeapon:
     def getAngleDeflection(self):
-        return random.randrange(-300, 300) / 100
+        return random.randrange(-200, 200) / 100
 
     def fire(self, id=None, position=None, animation_position=None, rotation=None, animation_rotation=None, last_update_time=None, parent_id=None):
-        bullet = StandartBullet()
+        bullet = LightBullet()
 
         # if not position: position = self.firePosition()
         # if not rotation: rotation = self.fireRotation()

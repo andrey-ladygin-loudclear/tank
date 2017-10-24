@@ -163,12 +163,15 @@ class MainSceneLayer(cocos.layer.ScrollableLayer, pyglet.event.EventDispatcher):
 
         if self.sumDt > 30:
             self.sumDt = 0.0
-            addGamePlayer(type=1, clan=1, position=(1070, 200), bot=True, rotation=180)
+
+            w, h = Global.MapWidth, Global.MapHeight
+
+            addGamePlayer(type=1, clan=1, position=(w/2 - 150, 300), bot=True, rotation=180)
             # addGamePlayer(type=1, clan=1, position=(1120, 200), bot=True, rotation=180)
-            addGamePlayer(type=1, clan=1, position=(1170, 200), bot=True, rotation=180)
+            addGamePlayer(type=1, clan=1, position=(w/2 + 150, 300), bot=True, rotation=180)
             #
-            # addGamePlayer(type=2, clan=2, position=(1070, 3640), bot=True)
+            addGamePlayer(type=2, clan=2, position=(w/2 - 150, h - 300), bot=True)
             # addGamePlayer(type=2, clan=2, position=(1120, 3640), bot=True)
-            # addGamePlayer(type=2, clan=2, position=(1170, 3640), bot=True)
+            addGamePlayer(type=2, clan=2, position=(w/2 + 150, h - 300), bot=True)
 
 

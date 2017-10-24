@@ -95,8 +95,6 @@ def createInterface(tanktype, clan, ip):
     director.director.run(main_scene)
 
 
-
-
 def connectionsListenersPump(fn):
     Global.connections_listener = Network(localaddr=('localhost', 1332))
 

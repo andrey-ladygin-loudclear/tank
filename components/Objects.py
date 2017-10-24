@@ -26,8 +26,8 @@ def load_map():
         wall.id = Global.getNextId()
         Global.all_walls.append(wall)
 
-        if wall.type != 0 and wall.type != 1:
-            Global.walls.append(wall)
+        # if wall.type != 0 and wall.type != 1:
+        #     Global.walls.append(wall)
 
     set_walls()
 
@@ -42,27 +42,28 @@ def add_background():
     Global.Layers.addWall(spriteObj)
 
 def add_clans_objects():
-    tower = MiniGunTower(position=(1000, 2320), clan=2)
+    #4480
+    tower = MiniGunTower(position=(2000, 2740), clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
-    tower = MiniGunTower(position=(1240, 2320), clan=2)
-    tower.do(TowerMovingHandlers())
-    addObjectToGame(tower)
-
-
-    tower = MiniGunTower(position=(1000, 1520), clan=1, rotation=180)
-    tower.do(TowerMovingHandlers())
-    addObjectToGame(tower)
-
-    tower = MiniGunTower(position=(1240, 1520), clan=1, rotation=180)
+    tower = MiniGunTower(position=(2480, 2740), clan=2)
     tower.do(TowerMovingHandlers())
     addObjectToGame(tower)
 
 
+    tower = MiniGunTower(position=(2000, 1740), clan=1, rotation=180)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
 
-    center = Center(position=(1120, 3740), clan=2)
+    tower = MiniGunTower(position=(2480, 1740), clan=1, rotation=180)
+    tower.do(TowerMovingHandlers())
+    addObjectToGame(tower)
+
+
+
+    center = Center(position=(2240, 4330), clan=2)
     addObjectToGame(center)
-    center = Center(position=(1120, 100), clan=1)
+    center = Center(position=(2240, 150), clan=1)
     addObjectToGame(center)
 
 def set_walls():
@@ -77,6 +78,9 @@ def set_walls():
             brick_wall = Wall(src, type)
         except ResourceNotFoundException:
             continue
+
+        if type != 0 and type != 1:
+            Global.addWallToGame(brick_wall)
 
         #brick_wall.id = wall.get(NetworkDataCodes.ID)
         brick_wall.id = wall.id

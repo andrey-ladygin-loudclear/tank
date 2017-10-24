@@ -7,21 +7,21 @@ from objects.animations.ExplosionStandartBulletAnimation2 import explosionStanda
 from objects.animations.StandartBulletFireAnimation import StandartBulletFireAnimation
 
 
-class StandartBullet(Bullet):
-    type = 'StandartBullet'
+class LightBullet(Bullet):
+    type = 'LightBullet'
     spriteName = 'assets/bullets/bullet.png'
     startPosition = (0, 0)
 
-    scale = 0.8
-    damage = 3
+    scale = 0.4
+    damage = 1
     damageRadius = 5
     velocity = (0, 0)
-    fireLength = 1000
+    fireLength = 600
 
-    speed = 400
+    speed = 800
 
     def __init__(self):
-        super(StandartBullet, self).__init__(self.spriteName)
+        super(LightBullet, self).__init__(self.spriteName)
 
     def removeAnimation(self):
         Global.Layers.removeAnimation(self)
@@ -34,4 +34,4 @@ class StandartBullet(Bullet):
         animation = explosionStandartBulletAnimation()
         animation.appendAnimationToLayer(position)
 
-        super(StandartBullet, self).destroy()
+        super(LightBullet, self).destroy()

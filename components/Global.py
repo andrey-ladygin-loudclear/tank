@@ -17,6 +17,9 @@ PullConnsctions = []
 TankNetworkListenerConnection = None
 IsGeneralServer = False
 
+MapWidth = 4480
+MapHeight = 4480
+
 Queue = []
 last_id = 0
 CurrentPlayerId = 0
@@ -28,6 +31,12 @@ bullets = []
 Layers = None
 
 connections_listener = None
+
+
+# def getEnemyCenter(clan):
+#     for obj in objects:
+#         if isinstance(obj, Center) and obj.clan != clan:
+#             return obj
 
 def addObjectToGame(object):
     objects.append(object)
@@ -95,6 +104,10 @@ def getGameWall(id):
 
 def getGameWalls():
     return walls
+
+def addWallToGame(wall):
+    CollisionManager.add(wall)
+    walls.append(wall)
 
 def addanimationToGame(anim, duration=None):
     Layers.addAnimation(anim)

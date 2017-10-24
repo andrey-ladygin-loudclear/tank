@@ -28,6 +28,7 @@ class NetworkDataCodes:
     BULLET = 'b'
     STANDART_BULLET = 'StandartBullet'
     HEAVY_BULLET = 'HeavyBullet'
+    LIGHT_BULLET = 'LightBullet'
     WALL = 'w'
     SCALE = 'sc'
 
